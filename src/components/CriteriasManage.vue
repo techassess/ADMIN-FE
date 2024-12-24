@@ -119,7 +119,7 @@ export default {
       if (result.isConfirmed) {
         try {
           const res = await CriteriasService.deletedCriterias(id);
-          if (res.code === 1012) {
+          if (res.status === 204) {
             Swal.fire({
               title: "Đã xóa!",
               text: "Tiêu chí đã được xóa thành công.",
