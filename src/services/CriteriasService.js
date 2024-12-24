@@ -21,7 +21,7 @@ const CriteriasService = {
       const response = await axios.delete(
         `http://localhost:8080/api/criterias/${id}`
       );
-      return response.data;
+      return response;
     } catch (error) {
       console.error(error);
     }
