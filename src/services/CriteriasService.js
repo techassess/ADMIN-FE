@@ -29,6 +29,23 @@ const CriteriasService = {
       console.error(error);
     }
   },
+  updateCriterias: async (id, criteriaData) => {
+    try {
+      const updatedCriteria = {
+        title: criteriaData.title,
+        point: criteriaData.point,
+      };
+      
+      const response = await axios.put(
+        `http://localhost:8080/api/criterias/${id}`,
+        updatedCriteria
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating criteria:", error);
+      throw error; 
+    }
+  },
 };
 
 export default CriteriasService;
