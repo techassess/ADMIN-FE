@@ -15,11 +15,11 @@
                 <input type="text" class="form-control" id="title" v-model="criteria.title" required
                   placeholder="Nhập tiêu chí đánh giá" />
               </div>
-              <div class="mb-3">
+              <!-- <div class="mb-3">
                 <label for="point" class="form-label">Số điểm</label>
                 <input type="text" class="form-control" id="point" v-model="criteria.point" required
                   placeholder="Nhập số điểm" />
-              </div>
+              </div> -->
             </form>
           </div>
 
