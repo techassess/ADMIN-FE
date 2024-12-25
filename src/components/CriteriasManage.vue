@@ -102,7 +102,6 @@ import AddEmployeeModal from "./modal/AddEmployeeModal.vue";
 import EditCriteriasModal from "./modal/Criterias/EditCriteriasModal.vue";
 import Swal from "sweetalert2";
 import CriteriasService from "@/services/CriteriasService";
-
 export default {
   components: {
     AddEmployeeModal,
@@ -138,17 +137,26 @@ export default {
   },
   methods: {
     async fetchCriterias() {
-      try {
-        const response = await CriteriasService.fetchCriterias();
-        if (response.code === 1010) {
-          this.criterias = response.data.filter(
-            (criteria) => criteria.deleted !== true
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching criterias:", error);
+    try {
+      const response = await CriteriasService.fetchCriterias();
+      if (response.code === 1010) {
+        this.criterias = response.data.filter(criteria => criteria.deleted !== true);
       }
-    },
+    } catch (error) {
+      console.error("Error fetching criterias:", error);
+    }
+  },
+
+  editCriterias(criteria) {
+    this.selectedCriterias = { ...criteria };  
+    this.isModalVisible1 = true;  
+  },
+ 
+  handleCriteriaEdit() {
+    this.fetchCriterias();  
+  },
+
+
 
     async confirmDeleteCriterias(id) {
       const result = await Swal.fire({
@@ -191,19 +199,9 @@ export default {
     closeCriteriasEditModal() {
       this.isModalVisible1 = false;
     },
-    editCriterias(criteria) {
-      this.selectedCriterias = { ...criteria };
-      this.showCriteriasEditModal();
-    },
-    handleUpdate(updatedCriterias) {
-      const index = this.DataTest.findIndex(
-        (cri) => cri.id === updatedCriterias.id
-      );
-      if (index !== -1) {
-        this.DataTest.splice(index, 1, updatedCriterias);
-      }
-      this.closeCriteriasEditModal();
-    },
+
+
+  },
 
     prevPage() {
       if (this.currentPage > 1) {
@@ -223,7 +221,7 @@ export default {
       console.log(newCriterias);
       this.closeModal();
     },
-  },
+  
 };
 </script>
 <style scoped>
