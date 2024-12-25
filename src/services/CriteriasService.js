@@ -38,11 +38,28 @@ const CriteriasService = {
   fetchCriteriasById: async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/criterias${id}`
+        `http://localhost:8080/api/criterias/${id}`
       );
       return response.data;
     } catch (error) {
       console.error(error);
+    }
+  },
+  updateCriterias: async (id, criteriaData) => {
+    try {
+      const updatedCriteria = {
+        title: criteriaData.title,
+        point: criteriaData.point,
+      };
+      
+      const response = await axios.put(
+        `http://localhost:8080/api/criterias/${id}`,
+        updatedCriteria
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating criteria:", error);
+      throw error; 
     }
   },
 };
