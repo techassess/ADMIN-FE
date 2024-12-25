@@ -1,6 +1,6 @@
 <template>
   <div style="border-bottom: solid gray">
-    <h2 style="text-align: center">Quản lý tiêu chí đánh giá</h2>
+    <h2 style="text-align: center" >Quản lý tiêu chí đánh giá</h2>
   </div>
   <div class="content">
     <nav class="navbar navbar-light mt-3">
@@ -9,8 +9,12 @@
           Thêm tiêu chí
         </button>
         <!-- Search Bar -->
-        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tiêu chí đánh giá..."
-          class="search-bar" />
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Tìm kiếm tiêu chí đánh giá..."
+          class="search-bar"
+        />
       </div>
     </nav>
     <div class="table-responsive-md mt-2">
@@ -24,16 +28,36 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(criteria, index) in paginatedCriterias" :key="criteria.id">
+          <tr
+            v-for="(criteria, index) in paginatedCriterias"
+            :key="criteria.id"
+          >
             <td>{{ index + 1 }}</td>
             <td>{{ criteria.title }}</td>
-            <td>{{ criteria.point  }}</td>
+            <td>{{ criteria.point }}</td>
             <td>
-                <a type="button" class="btn btn-primary me-3" @click="detailCriterias(criteria)">Chi tiết</a>
-                <a type="button" class="btn btn-warning me-3" @click="editCriterias(criteria)">Sửa</a>
-                <button type="button" class="btn btn-danger" @click="confirmDeleteCriterias(criteria.id)">
-                    Xoá
-                </button>
+              <button class="btn btn-primary me-3">
+                <router-link
+                  :to="`/detail-criterias/${criteria.id}`"
+                  class="nav-link"
+                  active-class="active"
+                >Chi tiết
+                </router-link>
+              </button>
+
+              <a
+                type="button"
+                class="btn btn-warning me-3"
+                @click="editCriterias(criteria)"
+                >Sửa</a
+              >
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="confirmDeleteCriterias(criteria.id)"
+              >
+                Xoá
+              </button>
             </td>
           </tr>
         </tbody>
@@ -41,19 +65,35 @@
     </div>
     <!-- Pagination -->
     <div class="pagination-wrapper">
-      <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="pagination-btn"
+      >
         <i class="fas fa-arrow-left"></i>
       </button>
       <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="pagination-btn"
+      >
         <i class="fas fa-arrow-right"></i>
       </button>
     </div>
 
     <!-- Modal Component -->
-    <AddEmployeeModal :isVisible="isModalVisible" @close="closeModal" @criterias-added="fetchCriterias" />
-    <EditCriteriasModal :is-visible1="isModalVisible1" :criteriasData="selectedCriterias" @close="closeCriteriasEditModal"
-      @criterias-edited="fetchCriterias" />
+    <AddEmployeeModal
+      :isVisible="isModalVisible"
+      @close="closeModal"
+      @criterias-added="fetchCriterias"
+    />
+    <EditCriteriasModal
+      :is-visible1="isModalVisible1"
+      :criteriasData="selectedCriterias"
+      @close="closeCriteriasEditModal"
+      @criterias-edited="fetchCriterias"
+    />
   </div>
 </template>
 
@@ -127,7 +167,7 @@ export default {
               timer: 1500,
               showConfirmButton: false,
             });
-            this.fetchCriterias(); // Cập nhật lại danh sách tiêu chí
+            this.fetchCriterias();
           }
         } catch (error) {
           console.error("Lỗi khi xóa tiêu chí:", error);
@@ -263,8 +303,6 @@ export default {
   background-color: #f2f2f2;
 }
 
-
-
 .pagination-wrapper {
   display: flex;
   justify-content: center;
@@ -296,5 +334,4 @@ export default {
   background-color: #aaa;
   cursor: not-allowed;
 }
-
 </style>
