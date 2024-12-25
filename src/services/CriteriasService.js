@@ -1,21 +1,20 @@
 import axios from "axios";
 const CriteriasService = {
-  //   addCriterias: async (formData) => {
-  //     try {
-  //       const response = await axios.post(
-  //         "http://localhost:8080/api/auths/register",
-  //         formData,
-  //         {
-  //           headers: {
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         }
-  //       );
-  //       return response.data;
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   },
+  addCriteria: async (formData) => {
+    try {
+      const resp = await axios.post(
+        "http://localhost:8080/api/criterias",
+        formData,
+        {
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+      return resp.data;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
   deletedCriterias: async (id) => {
     try {
       const response = await axios.delete(
@@ -26,6 +25,7 @@ const CriteriasService = {
       console.error(error);
     }
   },
+
   fetchCriterias: async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/criterias");
@@ -34,6 +34,7 @@ const CriteriasService = {
       console.error(error);
     }
   },
+
   fetchCriteriasById: async (id) => {
     try {
       const response = await axios.get(

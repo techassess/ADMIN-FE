@@ -5,12 +5,11 @@
   <div class="content">
     <nav class="navbar navbar-light mt-3">
       <div class="top-bar">
-        <button class="btn btn-success me-3" type="button" @click="openModal">
+        <button class="btn btn-success me-3" type="button" @click="openAddCriteriaModal">
           Thêm tiêu chí
         </button>
         <!-- Search Bar -->
-        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tiêu chí đánh giá..."
-          class="search-bar" />
+        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tiêu chí đánh giá..." class="search-bar" />
       </div>
     </nav>
     <div class="table-responsive-md mt-2">
@@ -27,13 +26,13 @@
           <tr v-for="(criteria, index) in paginatedCriterias" :key="criteria.id">
             <td>{{ index + 1 }}</td>
             <td>{{ criteria.title }}</td>
-            <td>{{ criteria.point  }}</td>
+            <td>{{ criteria.point }}</td>
             <td>
-                <a type="button" class="btn btn-primary me-3" @click="detailCriterias(criteria)">Chi tiết</a>
-                <a type="button" class="btn btn-warning me-3" @click="editCriterias(criteria)">Sửa</a>
-                <button type="button" class="btn btn-danger" @click="confirmDeleteCriterias(criteria.id)">
-                    Xoá
-                </button>
+              <a type="button" class="btn btn-primary me-3" @click="detailCriterias(criteria)">Chi tiết</a>
+              <a type="button" class="btn btn-warning me-3" @click="editCriterias(criteria)">Sửa</a>
+              <button type="button" class="btn btn-danger" @click="confirmDeleteCriterias(criteria.id)">
+                Xoá
+              </button>
             </td>
           </tr>
         </tbody>
@@ -51,27 +50,29 @@
     </div>
 
     <!-- Modal Component -->
-    <AddEmployeeModal :isVisible="isModalVisible" @close="closeModal" @criterias-added="fetchCriterias" />
-    <EditCriteriasModal :is-visible1="isModalVisible1" :criteriasData="selectedCriterias" @close="closeCriteriasEditModal"
-      @criterias-edited="fetchCriterias" />
+    <AddCriteriasModal :is-visible="isAddCriteriaModalVisible" @close="closeAddCriteriaModal"
+      @criterias-added="fetchCriterias" />
+    <EditCriteriasModal :is-visible1="isModalVisible1" :criteriasData="selectedCriterias"
+      @close="closeCriteriasEditModal" @criterias-edited="fetchCriterias" />
   </div>
 </template>
 
 <script>
-import AddEmployeeModal from "./modal/AddEmployeeModal.vue";
 import EditCriteriasModal from "./modal/Criterias/EditCriteriasModal.vue";
 import Swal from "sweetalert2";
 import CriteriasService from "@/services/CriteriasService";
+import AddCriteriasModal from "./modal/Criterias/AddCriteriasModal.vue";
 
 export default {
   components: {
-    AddEmployeeModal,
     EditCriteriasModal,
+    AddCriteriasModal,
   },
   data() {
     return {
-      isModalVisible: false,
+      // isModalVisible: false,
       isModalVisible1: false,
+      isAddCriteriaModalVisible: false,
       selectedCriterias: null,
       criterias: [],
       currentPage: 1,
@@ -142,6 +143,9 @@ export default {
     openModal() {
       this.isModalVisible = true;
     },
+    openAddCriteriaModal() {
+      this.isAddCriteriaModalVisible = true;
+    },
     showCriteriasEditModal() {
       this.isModalVisible1 = true;
     },
@@ -150,6 +154,9 @@ export default {
     },
     closeCriteriasEditModal() {
       this.isModalVisible1 = false;
+    },
+    closeAddCriteriaModal() {
+      this.isAddCriteriaModalVisible = false;
     },
     editCriterias(criteria) {
       this.selectedCriterias = { ...criteria };
@@ -178,10 +185,10 @@ export default {
     goToPage(page) {
       this.currentPage = page;
     },
-    addEmployee(newCriterias) {
-      this.DataTest.push(newCriterias);
-      console.log(newCriterias);
-      this.closeModal();
+    addCriteria(newCriteria) {
+      this.DataTest.push(newCriteria);
+      console.log(newCriteria);
+      this.closeAddCriteriaModal();
     },
   },
 };
@@ -296,5 +303,4 @@ export default {
   background-color: #aaa;
   cursor: not-allowed;
 }
-
 </style>
