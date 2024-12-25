@@ -1,6 +1,6 @@
 <template>
   <div style="border-bottom: solid gray">
-    <h2 style="text-align: center" >Quản lý tiêu chí đánh giá</h2>
+    <h2 style="text-align: center">Quản lý tiêu chí đánh giá</h2>
   </div>
   <div class="content">
     <nav class="navbar navbar-light mt-3">
@@ -9,12 +9,7 @@
           Thêm tiêu chí
         </button>
         <!-- Search Bar -->
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Tìm kiếm tiêu chí đánh giá..."
-          class="search-bar"
-        />
+        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tiêu chí đánh giá..." class="search-bar" />
       </div>
     </nav>
     <div class="table-responsive-md mt-2">
@@ -28,34 +23,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(criteria, index) in paginatedCriterias"
-            :key="criteria.id"
-          >
+          <tr v-for="(criteria, index) in paginatedCriterias" :key="criteria.id">
             <td>{{ index + 1 }}</td>
             <td>{{ criteria.title }}</td>
             <td>{{ criteria.point }}</td>
             <td>
               <button class="btn btn-primary me-3">
-                <router-link
-                  :to="`/detail-criterias/${criteria.id}`"
-                  class="nav-link"
-                  active-class="active"
-                >Chi tiết
+                <router-link :to="`/detail-criterias/${criteria.id}`" class="nav-link" active-class="active">Chi tiết
                 </router-link>
               </button>
 
-              <a
-                type="button"
-                class="btn btn-warning me-3"
-                @click="editCriterias(criteria)"
-                >Sửa</a
-              >
-              <button
-                type="button"
-                class="btn btn-danger"
-                @click="confirmDeleteCriterias(criteria.id)"
-              >
+              <a type="button" class="btn btn-warning me-3" @click="editCriterias(criteria)">Sửa</a>
+              <button type="button" class="btn btn-danger" @click="confirmDeleteCriterias(criteria.id)">
                 Xoá
               </button>
             </td>
@@ -65,26 +44,18 @@
     </div>
     <!-- Pagination -->
     <div class="pagination-wrapper">
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="pagination-btn"
-      >
+      <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
         <i class="fas fa-arrow-left"></i>
       </button>
       <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="pagination-btn"
-      >
+      <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
         <i class="fas fa-arrow-right"></i>
       </button>
     </div>
 
     <!-- Modal Component -->
     <AddCriteriasModal :is-visible="isAddCriteriaModalVisible" @close="closeAddCriteriaModal"
-      @criterias-added="fetchCriterias" />
+      @criteria-added="fetchCriterias" />
     <EditCriteriasModal :is-visible1="isModalVisible1" :criteriasData="selectedCriterias"
       @close="closeCriteriasEditModal" @criterias-edited="fetchCriterias" />
   </div>
@@ -132,24 +103,24 @@ export default {
   },
   methods: {
     async fetchCriterias() {
-    try {
-      const response = await CriteriasService.fetchCriterias();
-      if (response.code === 1010) {
-        this.criterias = response.data.filter(criteria => criteria.deleted !== true);
+      try {
+        const response = await CriteriasService.fetchCriterias();
+        if (response.code === 1010) {
+          this.criterias = response.data.filter(criteria => criteria.deleted !== true);
+        }
+      } catch (error) {
+        console.error("Error fetching criterias:", error);
       }
-    } catch (error) {
-      console.error("Error fetching criterias:", error);
-    }
-  },
+    },
 
-  editCriterias(criteria) {
-    this.selectedCriterias = { ...criteria };  
-    this.isModalVisible1 = true;  
-  },
- 
-  handleCriteriaEdit() {
-    this.fetchCriterias();  
-  },
+    editCriterias(criteria) {
+      this.selectedCriterias = { ...criteria };
+      this.isModalVisible1 = true;
+    },
+
+    handleCriteriaEdit() {
+      this.fetchCriterias();
+    },
 
 
 
@@ -208,7 +179,7 @@ export default {
       const index = this.DataTest.findIndex(
         (cri) => cri.id === updatedCriterias.id
       );
-      if (index !== -1) { 
+      if (index !== -1) {
         this.DataTest.splice(index, 1, updatedCriterias);
       }
       this.closeCriteriasEditModal();

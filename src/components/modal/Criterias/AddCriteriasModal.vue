@@ -78,10 +78,10 @@ export default {
            * @type {ApiResponse}
            */
           const res = await CriteriasService.addCriteria(formData);
-          if (res.code === 201) {
+          if (res.code) {
             this.$emit("criteria-added");
             Swal.fire({
-              title: "Thêm tiêu chí thành công!",
+              title: res.message,
               icon: "success",
               timer: 1500,
               showConfirmButton: false,
@@ -93,15 +93,19 @@ export default {
             }, 1500);
           }
         } catch (error) {
+          console.error("Error adding criteria:", error);
           Swal.fire({
             title: "Lỗi!",
-            text: "Có lỗi xảy ra khi thêm tiêu chí.",
+            text: error.response.data.error,
             icon: "error",
             confirmButtonText: "Đóng",
           });
+          this.resetForm();
+          setTimeout(() => {
+            this.closeModal();
+          }, 1500);
         } finally {
           // Đảm bảo isLoading sẽ được đặt lại thành false
-          window.location.reload();
           this.isLoading = false;
         }
       }
