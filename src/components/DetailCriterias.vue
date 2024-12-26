@@ -43,7 +43,7 @@
               >
                 Sửa
               </button>
-              <button type="button" class="btn btn-danger">Xoá</button>
+              <button type="button" class="btn btn-danger" @click="confirmDeleteQuestion(question.id)">Xoá</button>
             </td>
           </tr>
         </tbody>
@@ -84,6 +84,10 @@
 <script>
 import CriteriasService from "@/services/CriteriasService";
 import EditQuestionModal from "./modal/Criterias/EditQuestionModal.vue";
+import Swal from "sweetalert2";
+import QuestionService from "@/services/QuestionService";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 export default {
   components: {
@@ -126,6 +130,7 @@ export default {
         const response = await CriteriasService.fetchCriteriasById(id);
         if (response.code === 1010) {
           this.criteriaDetail = response.data;
+          console.log(this.criteriaDetail)
         } else {
           console.error("Lỗi khi lấy chi tiết tiêu chí:", response.message);
         }
@@ -133,6 +138,29 @@ export default {
         console.error("Lỗi khi gọi API:", error);
       }
     },
+
+    async confirmDeleteQuestion(id) {
+      const result = await Swal.fire({
+        title: "Bạn có muốn xóa câu hỏi này?",
+        icon: "warning",
+        showCancelButton: true,
+      });
+      if (result.isConfirmed) {
+        try {
+          const res = await QuestionService.deletedQuestion(id);
+          if (res.status === 204) {
+            toast.success("Xoá câu hỏi thành công!", {
+              autoClose: 2000,
+            });
+            this.fetchCriteriaDetail();
+          }
+        } catch (error) {
+          console.error("Lỗi khi xóa câu hỏi:", error);
+          toast.error("Lỗi khi xóa câu hỏi");
+        }
+      }
+    },
+
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
