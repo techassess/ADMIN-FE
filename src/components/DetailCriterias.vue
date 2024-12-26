@@ -40,14 +40,25 @@
             <td>{{ question.title }}</td>
             <td>{{ question.point }}</td>
             <td>
-              <button class="btn btn-primary me-2">Chi tiết</button>
+              <button
+                class="btn btn-primary me-2"
+                @click="openDetailModal(question)"
+              >
+                Chi tiết
+              </button>
               <button
                 class="btn btn-warning me-2"
                 @click="openEditModal(question)"
               >
                 Sửa
               </button>
-              <button type="button" class="btn btn-danger" @click="confirmDeleteQuestion(question.id)">Xoá</button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="confirmDeleteQuestion(question.id)"
+              >
+                Xoá
+              </button>
             </td>
           </tr>
         </tbody>
@@ -75,6 +86,13 @@
       </button>
     </div>
 
+    <DetailQuestionModal
+      v-if="isDetailModalVisible"
+      :isVisible="isDetailModalVisible"
+      :question="selectedQuestion"
+      @close="closeDetailModal"
+    />
+
     <AddQuestionModal
       v-if="isAddQuestionModalVisible"
       :is-visible="isAddQuestionModalVisible"
@@ -100,11 +118,13 @@ import QuestionService from "@/services/QuestionService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import AddQuestionModal from "./modal/Criterias/AddQuestionModal.vue";
+import DetailQuestionModal from "./modal/Criterias/DetailQuestionModal.vue";
 
 export default {
   components: {
     EditQuestionModal,
     AddQuestionModal,
+    DetailQuestionModal,
   },
   data() {
     return {
@@ -113,6 +133,12 @@ export default {
         point: 0,
         questions: [],
       },
+      questionDetails: {
+        title: "",
+        point: 0,
+        answers: [],
+      },
+      isDetailModalVisible: false,
       currentPage: 1,
       itemsPerPage: 10,
       isAddQuestionModalVisible: false,
@@ -148,7 +174,6 @@ export default {
         const response = await CriteriasService.fetchCriteriasById(id);
         if (response.code === 1010) {
           this.criteriaDetail = response.data;
-          console.log(this.criteriaDetail)
         } else {
           console.error("Lỗi khi lấy chi tiết tiêu chí:", response.message);
         }
@@ -184,10 +209,18 @@ export default {
         this.currentPage++;
       }
     },
+    openDetailModal(question) {
+      this.selectedQuestion = question;
+      this.isDetailModalVisible = true;
+    },
+
+    closeDetailModal() {
+      this.isDetailModalVisible = false;
+      this.selectedQuestion = null;
+    },
+
     openAddQuestionModal() {
       this.isAddQuestionModalVisible = true;
-      console.log("Opening Add Question Modal");
-      
     },
     closeAddQuestionModal() {
       this.isAddQuestionModalVisible = false;
