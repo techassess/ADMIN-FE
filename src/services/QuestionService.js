@@ -20,6 +20,17 @@ const QuestionService = {
     } catch (error) {
       console.error(error);
     }
+  },
+
+  getQuestionById: async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/questions/v2/${id}`
+      );
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 
