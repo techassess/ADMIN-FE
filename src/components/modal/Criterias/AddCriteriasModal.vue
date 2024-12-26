@@ -4,7 +4,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: solid 0.05em gray">
-            <h5 class="modal-title">Thêm tiêu chí</h5>
+            <h5 class="modal-title">Thêm mới tiêu chí</h5>
             <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
           </div>
 
@@ -12,8 +12,11 @@
             <form ref="criteriaForm" class="form" @submit.prevent="submitForm">
               <div class="mb-3">
                 <label for="title" class="form-label">Tên tiêu chí</label>
-                <input type="text" class="form-control" id="title" v-model="criteria.title" required
-                  placeholder="Nhập tiêu chí đánh giá" />
+                <input type="text" class="form-control" id="title" v-model="criteria.title"
+                  placeholder="Nhập tiêu chí đánh giá" :class="{ 'is-invalid': errors.title }" />
+                  <div class="invalid-feedback" v-if="errors.title ">
+          {{ errors.title  }}
+        </div>
               </div>
               <!-- <div class="mb-3">
                 <label for="point" class="form-label">Số điểm</label>
@@ -35,7 +38,9 @@
 </template>
 
 <script>
-import Swal from "sweetalert2";
+//import Swal from "sweetalert2";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 import CriteriasService from "@/services/CriteriasService";
 
 export default {
@@ -52,11 +57,17 @@ export default {
         title: "",
         point: ""
       },
+      errors: {
+        title: null,
+        point: null,
+      },
+      
       isLoading: false,
     };
   },
   methods: {
     closeModal() {
+      this.errors.title = null;
       this.resetForm();
       this.$emit("close");
     },
@@ -79,30 +90,20 @@ export default {
           const res = await CriteriasService.addCriteria(formData);
           if (res.code) {
             this.$emit("criteria-added");
-            Swal.fire({
-              title: res.message,
-              icon: "success",
-              timer: 1500,
-              showConfirmButton: false,
-            });
-
+            toast.success("Thêm tiêu chí thành công!", {
+            autoClose: 2000,
+          });
+          this.errors.title = null;
             this.resetForm();
             setTimeout(() => {
               this.closeModal();
             }, 1500);
           }
         } catch (error) {
-          console.error("Error adding criteria:", error);
-          Swal.fire({
-            title: "Lỗi!",
-            text: error.response.data.error,
-            icon: "error",
-            confirmButtonText: "Đóng",
-          });
-          this.resetForm();
-          setTimeout(() => {
-            this.closeModal();
-          }, 1500);
+          // toast.error(error.response.data.error);
+          // return;
+          console.log("error.response.data.error : ", error.response.data.error)
+          this.errors.title = error.response.data.error;
         } finally {
           // Đảm bảo isLoading sẽ được đặt lại thành false
           this.isLoading = false;
@@ -119,4 +120,12 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.is-invalid {
+  border-color: #dc3545;
+}
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875em;
+}
+</style>

@@ -128,11 +128,10 @@ export default {
           payload
         );
         this.$emit("question-updated", payload);
-        this.closeForm();
-
         toast.success("Cập nhật câu hỏi thành công!", {
-            autoClose: 2000,
+          autoClose: 2000,
         });
+        this.closeForm();
       } catch (error) {
         toast.error("Cập nhật không thành công");
       }
