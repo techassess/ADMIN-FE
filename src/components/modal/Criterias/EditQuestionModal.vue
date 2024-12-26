@@ -82,6 +82,8 @@
 
 <script>
 import axios from "axios";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 export default {
   props: {
     isVisible: Boolean,
@@ -125,6 +127,9 @@ export default {
           payload
         );
         this.$emit("question-updated", payload);
+        toast.success("Cập nhật thành công!", {
+            autoClose: 2000,
+          });
         this.closeForm();
       } catch (error) {
         console.error("Error updating question:", error);
