@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 import CriteriasService from "@/services/CriteriasService";
 
 export default {
@@ -71,7 +73,9 @@ export default {
 
       try {
         await CriteriasService.updateCriterias(this.criteria.id, this.criteria);
-        alert("Cập nhật thành công!");
+        toast.success("Cập nhật thành công!", {
+            autoClose: 2000,
+          });
         this.$emit("criterias-edited");
         this.closeForm();
       } catch (error) {

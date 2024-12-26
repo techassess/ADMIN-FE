@@ -82,6 +82,8 @@
 
 <script>
 import axios from "axios";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 export default {
   props: {
     isVisible: Boolean,
@@ -124,6 +126,9 @@ export default {
           `http://localhost:8080/api/questions/${this.localQuestion.id}`,
           payload
         );
+        toast.success("Cập nhật câu hỏi thành công!", {
+            autoClose: 2000,
+          });
         console.log("Cập nhật câu hỏi thành công!");
         this.$emit("question-updated", payload);
         this.closeForm();
