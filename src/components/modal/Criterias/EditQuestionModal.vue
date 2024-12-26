@@ -84,6 +84,7 @@
 import axios from "axios";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+
 export default {
   props: {
     isVisible: Boolean,
@@ -106,7 +107,7 @@ export default {
   methods: {
     async updateQuestion() {
       if (this.hasErrors) {
-        console.log("Vui lòng sửa các lỗi trước khi cập nhật.");
+        toast.warn("Vui lòng sửa các lỗi trước khi cập nhật.");
         return;
       }
 
@@ -131,8 +132,12 @@ export default {
             autoClose: 2000,
           });
         this.closeForm();
+
+        toast.success("Cập nhật câu hỏi thành công!", {
+            autoClose: 2000,
+        });
       } catch (error) {
-        console.error("Error updating question:", error);
+        toast.error("Cập nhật không thành công");
       }
     },
     validateQuestion() {
