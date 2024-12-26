@@ -13,9 +13,9 @@
               <div class="mb-3">
                 <label for="title" class="form-label">Tên tiêu chí</label>
                 <input type="text" class="form-control" id="title" v-model="criteria.title"
-                  placeholder="Nhập tiêu chí đánh giá" :class="{ 'is-invalid': errors.title || serverErrors.title }" />
-                  <div class="invalid-feedback" v-if="errors.title || serverErrors.title">
-          {{ errors.title || serverErrors.title }}
+                  placeholder="Nhập tiêu chí đánh giá" :class="{ 'is-invalid': errors.title }" />
+                  <div class="invalid-feedback" v-if="errors.title ">
+          {{ errors.title  }}
         </div>
               </div>
               <!-- <div class="mb-3">
@@ -61,19 +61,9 @@ export default {
         title: null,
         point: null,
       },
-      serverErrors: {
-        title: null, 
-      },
+      
       isLoading: false,
     };
-  },
-  computed: {
-    hasErrors() {
-      return (
-        Object.values(this.errors).some((error) => error !== null) ||
-        !!this.serverErrors.title
-      );
-    },
   },
   methods: {
     closeModal() {
@@ -112,6 +102,7 @@ export default {
         } catch (error) {
           // toast.error(error.response.data.error);
           // return;
+          console.log("error.response.data.error : ", error.response.data.error)
           this.errors.title = error.response.data.error;
         } finally {
           // Đảm bảo isLoading sẽ được đặt lại thành false
