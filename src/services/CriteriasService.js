@@ -1,18 +1,14 @@
 import axios from "axios";
 const CriteriasService = {
   addCriteria: async (formData) => {
-    try {
-      const resp = await axios.post(
-        "http://localhost:8080/api/criterias",
-        formData,
-        {
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-      return resp.data;
-    } catch (error) {
-      console.error(error);
-    }
+    const resp = await axios.post(
+      "http://localhost:8080/api/criterias",
+      formData,
+      {
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+    return resp.data;
   },
 
   deletedCriterias: async (id) => {
@@ -51,7 +47,7 @@ const CriteriasService = {
         title: criteriaData.title,
         point: criteriaData.point,
       };
-      
+
       const response = await axios.put(
         `http://localhost:8080/api/criterias/${id}`,
         updatedCriteria
@@ -59,7 +55,7 @@ const CriteriasService = {
       return response.data;
     } catch (error) {
       console.error("Error updating criteria:", error);
-      throw error; 
+      throw error;
     }
   },
 };
