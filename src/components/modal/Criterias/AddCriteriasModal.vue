@@ -4,7 +4,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: solid 0.05em gray">
-            <h5 class="modal-title">Thêm mới nhân viên</h5>
+            <h5 class="modal-title">Thêm tiêu chí</h5>
             <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
           </div>
 

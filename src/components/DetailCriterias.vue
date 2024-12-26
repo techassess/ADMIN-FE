@@ -10,7 +10,11 @@
       <h4><strong>Tiêu đề:</strong> {{ criteriaDetail.title }}</h4>
       <h4 class="mb-3"><strong>Số điểm:</strong> {{ criteriaDetail.point }}</h4>
       <div class="d-flex justify-content-start mb-3">
-        <button class="btn btn-success me-3" type="button" @click="openModal">
+        <button
+          class="btn btn-success me-3"
+          type="button"
+          @click="openAddQuestionModal"
+        >
           Thêm câu hỏi
         </button>
       </div>
@@ -43,7 +47,7 @@
               >
                 Sửa
               </button>
-              <button type="button" class="btn btn-danger">Xoá</button>
+              <button type="button" class="btn btn-danger" @click="confirmDeleteQuestion(question.id)">Xoá</button>
             </td>
           </tr>
         </tbody>
@@ -71,6 +75,13 @@
       </button>
     </div>
 
+    <AddQuestionModal
+      v-if="isAddQuestionModalVisible"
+      :is-visible="isAddQuestionModalVisible"
+      @close="closeAddQuestionModal"
+      @question-added="refreshQuestions"
+    />
+
     <EditQuestionModal
       v-if="isModalVisible"
       :isVisible="isModalVisible"
@@ -84,16 +95,27 @@
 <script>
 import CriteriasService from "@/services/CriteriasService";
 import EditQuestionModal from "./modal/Criterias/EditQuestionModal.vue";
+import Swal from "sweetalert2";
+import QuestionService from "@/services/QuestionService";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import AddQuestionModal from "./modal/Criterias/AddQuestionModal.vue";
 
 export default {
   components: {
     EditQuestionModal,
+    AddQuestionModal,
   },
   data() {
     return {
+      criteriaDetail: {
+        title: "",
+        point: 0,
+        questions: [],
+      },
       currentPage: 1,
       itemsPerPage: 10,
-      criteriaDetail: {},
+      isAddQuestionModalVisible: false,
       isModalVisible: false,
       selectedQuestion: null,
     };
@@ -126,6 +148,7 @@ export default {
         const response = await CriteriasService.fetchCriteriasById(id);
         if (response.code === 1010) {
           this.criteriaDetail = response.data;
+          console.log(this.criteriaDetail)
         } else {
           console.error("Lỗi khi lấy chi tiết tiêu chí:", response.message);
         }
@@ -133,10 +156,41 @@ export default {
         console.error("Lỗi khi gọi API:", error);
       }
     },
+
+    async confirmDeleteQuestion(id) {
+      const result = await Swal.fire({
+        title: "Bạn có muốn xóa câu hỏi này?",
+        icon: "warning",
+        showCancelButton: true,
+      });
+      if (result.isConfirmed) {
+        try {
+          const res = await QuestionService.deletedQuestion(id);
+          if (res.status === 204) {
+            toast.success("Xoá câu hỏi thành công!", {
+              autoClose: 2000,
+            });
+            this.fetchCriteriaDetail();
+          }
+        } catch (error) {
+          console.error("Lỗi khi xóa câu hỏi:", error);
+          toast.error("Lỗi khi xóa câu hỏi");
+        }
+      }
+    },
+
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
       }
+    },
+    openAddQuestionModal() {
+      this.isAddQuestionModalVisible = true;
+      console.log("Opening Add Question Modal");
+      
+    },
+    closeAddQuestionModal() {
+      this.isAddQuestionModalVisible = false;
     },
     openEditModal(question) {
       this.selectedQuestion = question;
