@@ -66,6 +66,8 @@ import EditCriteriasModal from "./modal/Criterias/EditCriteriasModal.vue";
 import Swal from "sweetalert2";
 import CriteriasService from "@/services/CriteriasService";
 import AddCriteriasModal from "./modal/Criterias/AddCriteriasModal.vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 export default {
   components: {
@@ -134,13 +136,9 @@ export default {
         try {
           const res = await CriteriasService.deletedCriterias(id);
           if (res.status === 204) {
-            Swal.fire({
-              title: "Đã xóa!",
-              text: "Tiêu chí đã được xóa thành công.",
-              icon: "success",
-              timer: 1500,
-              showConfirmButton: false,
-            });
+            toast.success("Tiêu chí đã được xóa thành công.", {
+            autoClose: 2000,
+          });
             this.fetchCriterias();
           }
         } catch (error) {
