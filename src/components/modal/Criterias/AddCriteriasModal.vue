@@ -37,7 +37,6 @@
 <script>
 import Swal from "sweetalert2";
 import CriteriasService from "@/services/CriteriasService";
-import ApiResponse from "@/model/ApiResponse";
 
 export default {
   name: "AddCriteriasModal",
