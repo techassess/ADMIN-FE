@@ -76,7 +76,6 @@ export default {
   },
   data() {
     return {
-      // isModalVisible: false,
       isModalVisible1: false,
       isAddCriteriaModalVisible: false,
       selectedCriterias: null,

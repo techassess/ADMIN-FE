@@ -10,7 +10,11 @@
       <h4><strong>Tiêu đề:</strong> {{ criteriaDetail.title }}</h4>
       <h4 class="mb-3"><strong>Số điểm:</strong> {{ criteriaDetail.point }}</h4>
       <div class="d-flex justify-content-start mb-3">
-        <button class="btn btn-success me-3" type="button" @click="openModal">
+        <button
+          class="btn btn-success me-3"
+          type="button"
+          @click="openAddQuestionModal"
+        >
           Thêm câu hỏi
         </button>
       </div>
@@ -71,6 +75,13 @@
       </button>
     </div>
 
+    <AddQuestionModal
+      v-if="isAddQuestionModalVisible"
+      :is-visible="isAddQuestionModalVisible"
+      @close="closeAddQuestionModal"
+      @question-added="refreshQuestions"
+    />
+
     <EditQuestionModal
       v-if="isModalVisible"
       :isVisible="isModalVisible"
@@ -88,16 +99,23 @@ import Swal from "sweetalert2";
 import QuestionService from "@/services/QuestionService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import AddQuestionModal from "./modal/Criterias/AddQuestionModal.vue";
 
 export default {
   components: {
     EditQuestionModal,
+    AddQuestionModal,
   },
   data() {
     return {
+      criteriaDetail: {
+        title: "",
+        point: 0,
+        questions: [],
+      },
       currentPage: 1,
       itemsPerPage: 10,
-      criteriaDetail: {},
+      isAddQuestionModalVisible: false,
       isModalVisible: false,
       selectedQuestion: null,
     };
@@ -165,6 +183,14 @@ export default {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
       }
+    },
+    openAddQuestionModal() {
+      this.isAddQuestionModalVisible = true;
+      console.log("Opening Add Question Modal");
+      
+    },
+    closeAddQuestionModal() {
+      this.isAddQuestionModalVisible = false;
     },
     openEditModal(question) {
       this.selectedQuestion = question;
