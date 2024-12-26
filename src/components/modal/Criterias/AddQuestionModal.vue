@@ -79,9 +79,8 @@
 
 <script>
 import axios from "axios";
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
-
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 export default {
   props: {
@@ -104,7 +103,7 @@ export default {
         title: null,
         point: null,
       },
-      isSubmitting: false, 
+      isSubmitting: false,
     };
   },
   computed: {
@@ -114,6 +113,11 @@ export default {
   },
   methods: {
     async addQuestion() {
+      this.validateQuestion();
+      this.validatePoint();
+      this.localQuestion.answers.forEach((answer) =>
+        this.validateAnswer(answer)
+      );
       if (this.hasErrors) {
         toast.warning("Vui lòng sửa các lỗi trước khi lưu.");
         return;
@@ -132,12 +136,12 @@ export default {
 
       try {
         await axios.post("http://localhost:8080/api/questions", payload);
-        toast.success('Thêm câu hỏi thành công');
+        toast.success("Thêm câu hỏi thành công");
         this.$emit("question-added", payload);
         this.closeForm(); // Đóng form sau khi thêm câu hỏi
       } catch (error) {
         console.error("Lỗi khi thêm câu hỏi:", error);
-      }finally {
+      } finally {
         this.isSubmitting = false;
       }
     },

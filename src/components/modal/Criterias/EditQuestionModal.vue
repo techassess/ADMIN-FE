@@ -127,7 +127,6 @@ export default {
           `http://localhost:8080/api/questions/${this.localQuestion.id}`,
           payload
         );
-        toast.success("Cập nhật câu hỏi thành công.");
         this.$emit("question-updated", payload);
         this.closeForm();
 
