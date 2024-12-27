@@ -9,7 +9,7 @@
           </div>
 
           <div class="modal-body">
-            <form ref="criteriaForm" class="form">
+            <form ref="criteriaForm" class="form" @submit.prevent="addCriteria">
               <div class="mb-3">
                 <label for="title" class="form-label">Tên tiêu chí</label>
                 <input type="text" class="form-control" id="title" v-model="criteria.title" @blur="validateTitle"
