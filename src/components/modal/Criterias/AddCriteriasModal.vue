@@ -9,20 +9,15 @@
           </div>
 
           <div class="modal-body">
-            <form ref="criteriaForm" class="form" @submit.prevent="submitForm">
+            <form ref="criteriaForm" class="form" @submit.prevent="addCriteria">
               <div class="mb-3">
                 <label for="title" class="form-label">Tên tiêu chí</label>
-                <input type="text" class="form-control" id="title" v-model="criteria.title"
-                  placeholder="Nhập tiêu chí đánh giá" :class="{ 'is-invalid': errors.title }" />
-                  <div class="invalid-feedback" v-if="errors.title ">
-          {{ errors.title  }}
-        </div>
+                <input type="text" class="form-control" id="title" v-model="criteria.title" @blur="validateTitle"
+                  :class="{ 'is-invalid': errors.title }" placeholder=" Nhập tiêu chí đánh giá" />
+                <div v-if="errors.title" class="invalid-feedback">
+                  {{ errors.title }}
+                </div>
               </div>
-              <!-- <div class="mb-3">
-                <label for="point" class="form-label">Số điểm</label>
-                <input type="text" class="form-control" id="point" v-model="criteria.point" required
-                  placeholder="Nhập số điểm" />
-              </div> -->
             </form>
           </div>
 
@@ -55,14 +50,13 @@ export default {
     return {
       criteria: {
         title: "",
-        point: ""
       },
       errors: {
         title: null,
-        point: null,
       },
       
       isLoading: false,
+      isFormFilled: false,
     };
   },
   methods: {
@@ -72,16 +66,19 @@ export default {
       this.$emit("close");
     },
     async addCriteria() {
-      this.isLoading = true;
-      const form = this.$refs.criteriaForm;
-      if (form.reportValidity()) {
-        const newCriteria = JSON.parse(JSON.stringify(this.criteria));
-        const formData = new FormData();
-        for (const key in newCriteria) {
-          // if (key === "avatar") continue;
-          formData.append(key, newCriteria[key]);
-        }
-        // formData.append("avatar", this.selectedImage);
+      this.validateForm();
+      if (Object.values(this.errors).every(x => x === null || x === '')) {
+        console.log("Form is valid");
+        this.isFormFilled = true;
+      }
+      if (!this.isFormFilled) {
+        return;
+      }
+      const newCriteria = JSON.parse(JSON.stringify(this.criteria));
+      const formData = new FormData();
+      for (const key in newCriteria) {
+        formData.append(key, newCriteria[key]);
+      }
 
         try {
           /**
@@ -108,15 +105,24 @@ export default {
           // Đảm bảo isLoading sẽ được đặt lại thành false
           this.isLoading = false;
         }
-      }
-    },
-    submitForm() {
-      const newCriteria = JSON.parse(JSON.stringify(this.criteria));
-      this.$emit("add-criteria", newCriteria);
+    
     },
     resetForm() {
       this.criteria = {};
     },
+
+    validateForm() {
+      this.validateTitle();
+    },
+
+    validateTitle() {
+      if (!this.criteria.title) {
+        this.errors.title = "Vui lòng nhập tên tiêu chí";
+      } else {
+        this.errors.title = null;
+      }
+    },
+
   },
 };
 </script>
