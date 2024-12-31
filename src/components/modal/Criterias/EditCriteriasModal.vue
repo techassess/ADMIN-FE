@@ -3,7 +3,9 @@
     <h2 class="mb-4 bg-primary">Cập nhật tiêu chí</h2>
     <form @submit.prevent="updateCriteria">
       <div class="mb-3">
-        <label for="title" class="form-label d-flex text-start">Tên tiêu chí:</label>
+        <label for="title" class="form-label d-flex text-start"
+          >Tên tiêu chí:</label
+        >
         <input
           type="text"
           id="title"
@@ -18,8 +20,30 @@
         </div>
       </div>
 
+      <div class="mb-3">
+        <label for="criteriaType" class="form-label">Loại tiêu chí</label>
+        <select
+          class="form-control"
+          id="criteriaType"
+          v-model="criteria.type"
+          :class="{ 'is-invalid': errors.type }"
+        >
+          <option value="">Vui lòng chọn tiêu chí</option>
+          <option value="1">Loại 1</option>
+          <option value="2">Loại 2</option>
+          <option value="3">Loại 3</option>
+        </select>
+        <div class="invalid-feedback" v-if="errors.type">
+          {{ errors.type }}
+        </div>
+      </div>  
+
       <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary me-2" :disabled="hasErrors">
+        <button
+          type="submit"
+          class="btn btn-primary me-2"
+          :disabled="hasErrors"
+        >
           Cập nhật
         </button>
         <button type="button" class="btn btn-secondary" @click="closeForm">
@@ -52,7 +76,7 @@ export default {
         point: null,
       },
       serverErrors: {
-        title: null, 
+        title: null,
       },
     };
   },
@@ -74,8 +98,8 @@ export default {
       try {
         await CriteriasService.updateCriterias(this.criteria.id, this.criteria);
         toast.success("Cập nhật thành công!", {
-            autoClose: 2000,
-          });
+          autoClose: 2000,
+        });
         this.$emit("criterias-edited");
         this.closeForm();
       } catch (error) {
