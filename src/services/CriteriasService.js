@@ -59,6 +59,27 @@ const CriteriasService = {
       throw error;
     }
   },
+  updateCriteriaInDepartment: async (critediaId, departmentId, criteriaReqDto) => {
+    try {
+      const dto = {
+        criteriaReqDTO: {
+          title: criteriaReqDto.title,
+          point: criteriaReqDto.point,
+          visibleFor: criteriaReqDto.visibleFor
+        },
+        critediaId: critediaId,
+        departmentId: departmentId
+      }
+      const response = await axios.put(
+        `http://localhost:8080/api/criterias/update-criterion-in-department`,
+        dto
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating criteria:", error);
+      throw error;
+    }
+  },
 
   // department
   fetchDepartment: async () => {
@@ -70,7 +91,7 @@ const CriteriasService = {
     }
   },
 
-  
+
 };
 
 export default CriteriasService;
