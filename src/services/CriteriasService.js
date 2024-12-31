@@ -64,12 +64,12 @@ const CriteriasService = {
       const dto = {
         criteriaReqDTO: {
           title: criteriaReqDto.title,
-          point: criteriaReqDto.point,
           visibleFor: criteriaReqDto.visibleFor
         },
-        critediaId: critediaId,
+        criteriaId: critediaId,
         departmentId: departmentId
-      }
+      };
+
       const response = await axios.put(
         `http://localhost:8080/api/criterias/update-criterion-in-department`,
         dto

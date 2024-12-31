@@ -15,7 +15,7 @@
         <label for="criteriaType" class="form-label">Hiển thị cho</label>
         <select class="form-control" id="criteriaType" v-model="criteria.visibleFor"
           :class="{ 'is-invalid': errors.type }">
-          <option value=""> --- Vui lòng chọn --- </option>
+          <!-- <option :value="null" selected disabled> --- Vui lòng chọn --- </option> -->
           <option value="ALL_MEMBER">Tất cả thành viên</option>
           <option value="CROSS">Đánh giá chéo</option>
           <option value="SELF">Cá nhân</option>
@@ -82,13 +82,13 @@ export default {
 
       try {
         // await CriteriasService.updateCriterias(this.criteria.id, this.criteria);
-        const departmentId = localStorage.getItem("department_id");
+        const departmentId = localStorage.getItem("selectedDepartmentId");
         await CriteriasService.updateCriteriaInDepartment(this.criteria.id, departmentId, this.criteria);
         toast.success("Cập nhật thành công!", {
           autoClose: 2000,
         });
-        this.$emit("criterias-edited");
         this.closeForm();
+        this.$emit("criteria-edited");
       } catch (error) {
         console.error("Error updating criteria:", error);
 
