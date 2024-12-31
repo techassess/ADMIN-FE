@@ -170,8 +170,10 @@ export default {
   methods: {
     async fetchCriteriaDetail() {
       const id = this.$route.params.id;
+      const department_id = this.$route.params.selectedDepartmentId;
+      
       try {
-        const response = await CriteriasService.fetchCriteriasById(id);
+        const response = await CriteriasService.fetchCriteriasById(id, department_id);
         if (response.code === 1010) {
           this.criteriaDetail = response.data;
         } else {

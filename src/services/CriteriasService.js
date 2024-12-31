@@ -33,8 +33,9 @@ const CriteriasService = {
 
   fetchCriteriasById: async (id) => {
     try {
+      let department_id = JSON.parse(localStorage.getItem("department_id"))
       const response = await axios.get(
-        `http://localhost:8080/api/criterias/${id}`
+        `http://localhost:8080/api/criterias/${id}/${department_id}`
       );
       return response.data;
     } catch (error) {
@@ -58,6 +59,18 @@ const CriteriasService = {
       throw error;
     }
   },
+
+  // department
+  fetchDepartment: async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/departments");
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  
 };
 
 export default CriteriasService;

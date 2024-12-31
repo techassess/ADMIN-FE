@@ -4,13 +4,33 @@
   </div>
   <div class="content">
     <nav class="navbar navbar-light mt-3">
-      <div class="top-bar">
-        <button class="btn btn-success me-3" type="button" @click="openAddCriteriaModal">
-          Thêm tiêu chí
-        </button>
-        <!-- Search Bar -->
-        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tiêu chí đánh giá..." class="search-bar" />
-      </div>
+      <select
+        class="p-2 pe-3 rounded-3"
+        aria-label="Default select example"
+        v-model="selectedDepartmentId"
+        @change="handleDepartmentChange"
+      >
+        <option
+          v-for="department in departments"
+          :key="department.id"
+          :value="department.id"
+        >
+          {{ department.name }}
+        </option>
+      </select>
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="Tìm kiếm tiêu chí đánh giá..."
+        class="search-bar"
+      />
+      <button
+        class="btn btn-success me-3"
+        type="button"
+        @click="openAddCriteriaModal"
+      >
+        Thêm tiêu chí
+      </button>
     </nav>
     <div class="table-responsive-md mt-2">
       <table class="table table-hover table-bordered criteria-table">
@@ -18,6 +38,7 @@
           <tr>
             <th scope="col">STT</th>
             <th scope="col">Tên tiêu chí đánh giá</th>
+            <th scope="col">Loại tiêu chí đánh giá</th>
             <th scope="col">Số điểm</th>
             <th scope="col">Tác vụ</th>
           </tr>
@@ -25,16 +46,29 @@
         <tbody>
           <tr v-for="(criteria, index) in paginatedCriterias" :key="criteria.id">
             <td>{{ index + 1 }}</td>
-            <td>{{ criteria.title }}</td>
+            <td class="text-start">{{ criteria.title }}</td>
+            <td class="text-start">{{ criteria.visibleFor }}</td>
             <td>{{ criteria.point }}</td>
             <td>
               <button class="btn btn-primary me-3">
-                <router-link :to="`/detail-criterias/${criteria.id}`" class="nav-link" active-class="active">Chi tiết
-                </router-link>
+                <router-link
+                  :to="`/detail-criterias/${criteria.id}`"
+                  class="nav-link"
+                  active-class="active"
+                >Chi tiết</router-link>
               </button>
 
-              <a type="button" class="btn btn-warning me-3" @click="editCriterias(criteria)">Sửa</a>
-              <button type="button" class="btn btn-danger" @click="confirmDeleteCriterias(criteria.id)">
+              <a
+                type="button"
+                class="btn btn-warning me-3"
+                @click="editCriterias(criteria)"
+                >Sửa</a
+              >
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="confirmDeleteCriterias(criteria.id)"
+              >
                 Xoá
               </button>
             </td>
@@ -42,22 +76,38 @@
         </tbody>
       </table>
     </div>
+
     <!-- Pagination -->
     <div class="pagination-wrapper">
-      <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="pagination-btn"
+      >
         <i class="fas fa-arrow-left"></i>
       </button>
       <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="pagination-btn"
+      >
         <i class="fas fa-arrow-right"></i>
       </button>
     </div>
 
     <!-- Modal Component -->
-    <AddCriteriasModal :is-visible="isAddCriteriaModalVisible" @close="closeAddCriteriaModal"
-      @criteria-added="fetchCriterias" />
-    <EditCriteriasModal :is-visible1="isModalVisible1" :criteriasData="selectedCriterias"
-      @close="closeCriteriasEditModal" @criterias-edited="fetchCriterias" />
+    <AddCriteriasModal
+      :is-visible="isAddCriteriaModalVisible"
+      @close="closeAddCriteriaModal"
+      @criteria-added="fetchCriterias"
+    />
+    <EditCriteriasModal
+      :is-visible1="isModalVisible1"
+      :criteriasData="selectedCriterias"
+      @close="closeCriteriasEditModal"
+      @criterias-edited="fetchCriterias"
+    />
   </div>
 </template>
 
@@ -80,16 +130,16 @@ export default {
       isAddCriteriaModalVisible: false,
       selectedCriterias: null,
       criterias: [],
+      departments: [], // Danh sách phòng ban
+      selectedDepartmentId: 0, // ID của phòng ban được chọn
+      selectedDepartment: null, // Object của phòng ban được chọn
       currentPage: 1,
       itemsPerPage: 10,
+      searchQuery: "", // Dùng cho tìm kiếm tiêu chí
     };
   },
   mounted() {
-    const dropdownLink = document.getElementById("dropdownMenuLink");
-    if (dropdownLink) {
-      dropdownLink.classList.add("dropdown-toggle"); // Bảo đảm phần tử đã có class cần thiết
-    }
-    this.fetchCriterias();
+    this.fetchDepartments(); // Lấy danh sách phòng ban khi component được mount
   },
   computed: {
     totalPages() {
@@ -103,14 +153,37 @@ export default {
     },
   },
   methods: {
-    async fetchCriterias() {
+    // Lấy danh sách phòng ban từ API
+    async fetchDepartments() {
       try {
-        const response = await CriteriasService.fetchCriterias();
+        const response = await CriteriasService.fetchDepartment();
         if (response.code === 1010) {
-          this.criterias = response.data.filter(criteria => criteria.deleted !== true);
+          this.departments = response.data;
+
+          if (this.departments.length > 0) {
+            this.selectedDepartmentId = this.departments[0].id;
+            
+            this.handleDepartmentChange();
+          }
         }
       } catch (error) {
-        console.error("Error fetching criterias:", error);
+        console.error("Error fetching departments:", error);
+      }
+    },
+
+    // Cập nhật tiêu chí dựa trên phòng ban được chọn
+    handleDepartmentChange() {
+      this.selectedDepartment = this.departments.find(
+        (dept) => dept.id === this.selectedDepartmentId
+      );
+
+      if (this.selectedDepartment) {
+        this.criterias = this.selectedDepartment.criteria.filter(
+          (criteria) => !criteria.deleted,
+          localStorage.setItem("department_id",this.selectedDepartmentId)
+        );
+      } else {
+        this.criterias = [];
       }
     },
 
@@ -118,12 +191,6 @@ export default {
       this.selectedCriterias = { ...criteria };
       this.isModalVisible1 = true;
     },
-
-    handleCriteriaEdit() {
-      this.fetchCriterias();
-    },
-
-
 
     async confirmDeleteCriterias(id) {
       const result = await Swal.fire({
@@ -136,9 +203,9 @@ export default {
           const res = await CriteriasService.deletedCriterias(id);
           if (res.status === 204) {
             toast.success("Tiêu chí đã được xóa thành công.", {
-            autoClose: 2000,
-          });
-            this.fetchCriterias();
+              autoClose: 2000,
+            });
+            this.handleDepartmentChange();
           }
         } catch (error) {
           console.error("Lỗi khi xóa tiêu chí:", error);
@@ -150,36 +217,17 @@ export default {
         }
       }
     },
-    openModal() {
-      this.isModalVisible = true;
-    },
+
     openAddCriteriaModal() {
       this.isAddCriteriaModalVisible = true;
     },
-    showCriteriasEditModal() {
-      this.isModalVisible1 = true;
-    },
-    closeModal() {
-      this.isModalVisible = false;
-    },
-    closeCriteriasEditModal() {
-      this.isModalVisible1 = false;
-    },
+
     closeAddCriteriaModal() {
       this.isAddCriteriaModalVisible = false;
     },
-    // editCriterias(criteria) {
-    //   this.selectedCriterias = { ...criteria };
-    //   this.showCriteriasEditModal();
-    // },
-    handleUpdate(updatedCriterias) {
-      const index = this.DataTest.findIndex(
-        (cri) => cri.id === updatedCriterias.id
-      );
-      if (index !== -1) {
-        this.DataTest.splice(index, 1, updatedCriterias);
-      }
-      this.closeCriteriasEditModal();
+
+    closeCriteriasEditModal() {
+      this.isModalVisible1 = false;
     },
 
     prevPage() {
@@ -195,38 +243,26 @@ export default {
     goToPage(page) {
       this.currentPage = page;
     },
-    addCriteria(newCriteria) {
-      this.DataTest.push(newCriteria);
-      console.log(newCriteria);
-      this.closeAddCriteriaModal();
-    },
-  }
+  },
 };
 </script>
+
 <style scoped>
 .dropdown-toggle {
   color: #007bff;
-  /* Màu chữ */
   font-weight: bold;
-  /* Kiểu chữ đậm */
   text-decoration: none;
-  /* Xóa gạch chân */
   padding: 0.5em 1em;
-  /* Khoảng cách padding */
   cursor: pointer;
 }
 
-/* Hiển thị dropdown khi hover */
 .dropdown:hover .dropdown-menu {
   display: block;
   margin-top: 0;
-  /* Đảm bảo không có khoảng cách */
 }
 
-/* Đảm bảo nút dropdown được hiển thị đúng */
 .dropdown-toggle::after {
   display: none;
-  /* Ẩn dấu mũi tên nếu cần */
 }
 
 .search-bar {
