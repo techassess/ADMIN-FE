@@ -37,18 +37,19 @@
               </div>
               <div class="mb-3">
                 <label for="criteriaType" class="form-label"
-                  >Loại tiêu chí</label
+                  >Hiển thị cho</label
                 >
                 <select
                   class="form-control"
                   id="criteriaType"
-                  v-model="criteria.type"
+                  v-model="criteria.visible_for"
                   :class="{ 'is-invalid': errors.type }"
                 >
-                  <option value="">Vui lòng chọn tiêu chí</option>
-                  <option value="1">Loại 1</option>
-                  <option value="2">Loại 2</option>
-                  <option value="3">Loại 3</option>
+                  <option value="">Vui lòng chọn</option>
+                  <option value="ALL_MEMBER">Dành cho tất cả</option>
+                  <option value="SELF">Tự đánh giá</option>
+                  <option value="CROSS">Đánh giá chéo</option>
+                  <option value="MANAGER">Quản lý</option>
                 </select>
                 <div class="invalid-feedback" v-if="errors.type">
                   {{ errors.type }}
@@ -70,9 +71,9 @@
 
 <script>
 //import Swal from "sweetalert2";
+import CriteriasService from "@/services/CriteriasService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import CriteriasService from "@/services/CriteriasService";
 
 export default {
   name: "AddCriteriasModal",
@@ -85,8 +86,11 @@ export default {
   data() {
     return {
       criteria: {
-        title: "",
-        point: ""
+        departmentId: null,
+        criteriaReqDTO: {
+          title: null,
+        },
+        visible_for: "",
       },
       errors: {
         title: null,
@@ -104,49 +108,35 @@ export default {
     },
     async addCriteria() {
       this.validateForm();
-      if (Object.values(this.errors).every(x => x === null || x === '')) {
-        console.log("Form is valid");
-        this.isFormFilled = true;
-      }
-      if (!this.isFormFilled) {
+      if (Object.values(this.errors).some((error) => error)) {
         return;
       }
-      const newCriteria = JSON.parse(JSON.stringify(this.criteria));
-      const formData = new FormData();
-      for (const key in newCriteria) {
-        formData.append(key, newCriteria[key]);
-      }
+      const depart_Id = localStorage.getItem("selectedDepartmentId")
+      const payload = {
+        departmentId: depart_Id, 
+        criteriaReqDTO: {
+          title: this.criteria.title,
+        },
+        visible_for:this.criteria.visible_for
+      };
 
-        try {
-          /**
-           * @type {ApiResponse}
-           */
-          const res = await CriteriasService.addCriteria(formData);
-          if (res.code) {
-            this.$emit("criteria-added");
-            toast.success("Thêm tiêu chí thành công!", {
-              autoClose: 2000,
-            });
-            this.errors.title = null;
-            this.resetForm();
-            setTimeout(() => {
-              this.closeModal();
-            }, 1500);
-          }
-        } catch (error) {
-          // toast.error(error.response.data.error);
-          // return;
-          console.log(
-            "error.response.data.error : ",
-            error.response.data.error
-          );
-          this.errors.title = error.response.data.error;
-        } finally {
-          // Đảm bảo isLoading sẽ được đặt lại thành false
-          this.isLoading = false;
+      try {
+        const res = await CriteriasService.addCriteria(payload);
+        if (res.code) {
+          this.$emit("criteria-added");
+          toast.success("Thêm tiêu chí thành công!", { autoClose: 2000 });
+          this.resetForm();
+          setTimeout(() => this.closeModal(), 1500);
         }
-    
+      } catch (error) {
+        console.error("Lỗi khi thêm tiêu chí:", error.response.data);
+        this.errors.title =
+          error.response.data?.message || "Lỗi không xác định";
+      } finally {
+        this.isLoading = false;
+      }
     },
+
     resetForm() {
       this.criteria = {};
     },
@@ -162,7 +152,6 @@ export default {
         this.errors.title = null;
       }
     },
-
   },
 };
 </script>
