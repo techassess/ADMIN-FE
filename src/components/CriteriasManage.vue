@@ -201,6 +201,7 @@ export default {
       if (result.isConfirmed) {
         try {
           const res = await CriteriasService.deletedCriterias(id);
+          console.log("res: ", res)
           if (res.status === 204) {
             toast.success("Tiêu chí đã được xóa thành công.", {
               autoClose: 2000,
