@@ -347,4 +347,14 @@ export default {
   background-color: #aaa;
   cursor: not-allowed;
 }
+
+.modal.show {
+  display: block;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-body input {
+  background-color: #fff;
+  width: 100%;
+}
 </style>

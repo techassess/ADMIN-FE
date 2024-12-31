@@ -1,21 +1,57 @@
 <template>
   <div v-if="isVisible" class="modal-backdrop">
-    <div class="modal fade show" tabindex="-1" id="myModal1" aria-hidden="false" style="display: block">
+    <div
+      class="modal fade show"
+      tabindex="-1"
+      id="myModal1"
+      aria-hidden="false"
+      style="display: block"
+    >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: solid 0.05em gray">
             <h5 class="modal-title">Thêm mới tiêu chí</h5>
-            <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
+            <button
+              type="button"
+              class="btn-close"
+              @click="closeModal"
+              aria-label="Close"
+            ></button>
           </div>
 
           <div class="modal-body">
             <form ref="criteriaForm" class="form" @submit.prevent="addCriteria">
               <div class="mb-3">
                 <label for="title" class="form-label">Tên tiêu chí</label>
-                <input type="text" class="form-control" id="title" v-model="criteria.title" @blur="validateTitle"
-                  :class="{ 'is-invalid': errors.title }" placeholder=" Nhập tiêu chí đánh giá" />
-                <div v-if="errors.title" class="invalid-feedback">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  v-model="criteria.title"
+                  placeholder="Nhập tiêu chí đánh giá"
+                  :class="{ 'is-invalid': errors.title }"
+                />
+                <div class="invalid-feedback" v-if="errors.title">
                   {{ errors.title }}
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="criteriaType" class="form-label"
+                  >Loại tiêu chí</label
+                >
+                <select
+                  class="form-control"
+                  id="criteriaType"
+                  v-model="criteria.type"
+                  :class="{ 'is-invalid': errors.type }"
+                >
+                  <option value="">Vui lòng chọn tiêu chí</option>
+                  <option value="1">Loại 1</option>
+                  <option value="2">Loại 2</option>
+                  <option value="3">Loại 3</option>
+                </select>
+                <div class="invalid-feedback" v-if="errors.type">
+                  {{ errors.type }}
                 </div>
               </div>
             </form>
@@ -50,11 +86,12 @@ export default {
     return {
       criteria: {
         title: "",
+        point: ""
       },
       errors: {
         title: null,
       },
-      
+
       isLoading: false,
       isFormFilled: false,
     };
@@ -88,9 +125,9 @@ export default {
           if (res.code) {
             this.$emit("criteria-added");
             toast.success("Thêm tiêu chí thành công!", {
-            autoClose: 2000,
-          });
-          this.errors.title = null;
+              autoClose: 2000,
+            });
+            this.errors.title = null;
             this.resetForm();
             setTimeout(() => {
               this.closeModal();
@@ -99,7 +136,10 @@ export default {
         } catch (error) {
           // toast.error(error.response.data.error);
           // return;
-          console.log("error.response.data.error : ", error.response.data.error)
+          console.log(
+            "error.response.data.error : ",
+            error.response.data.error
+          );
           this.errors.title = error.response.data.error;
         } finally {
           // Đảm bảo isLoading sẽ được đặt lại thành false
@@ -133,5 +173,14 @@ export default {
 .invalid-feedback {
   color: #dc3545;
   font-size: 0.875em;
+}
+
+#dropdownMenuButton1 {
+  width: 100%;
+}
+
+.dropdown-menu {
+  width: 100%;
+  box-sizing: border-box;
 }
 </style>
