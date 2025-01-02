@@ -46,10 +46,10 @@
                   :class="{ 'is-invalid': errors.type }"
                 >
                   <option value="">Vui lòng chọn</option>
-                  <option value="ALL_MEMBER">Dành cho tất cả</option>
+                  <option value="ALL_MEMBER">Tất cả nhân viên</option>
                   <option value="SELF">Tự đánh giá</option>
                   <option value="CROSS">Đánh giá chéo</option>
-                  <option value="MANAGER">Quản lý</option>
+                  <option value="MANAGER">Quản lý trực tiếp</option>
                 </select>
                 <div class="invalid-feedback" v-if="errors.type">
                   {{ errors.type }}
@@ -111,13 +111,13 @@ export default {
       if (Object.values(this.errors).some((error) => error)) {
         return;
       }
-      const depart_Id = localStorage.getItem("selectedDepartmentId")
+      const depart_Id = localStorage.getItem("selectedDepartmentId");
       const payload = {
-        departmentId: depart_Id, 
+        departmentId: depart_Id,
         criteriaReqDTO: {
           title: this.criteria.title,
         },
-        visible_for:this.criteria.visible_for
+        visible_for: this.criteria.visible_for,
       };
 
       try {

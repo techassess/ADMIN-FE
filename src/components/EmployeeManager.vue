@@ -4,13 +4,13 @@
   </div>
   <div class="content">
     <nav class="navbar navbar-light mt-3">
-      <div class="top-bar">
+      <div class="top-bar d-flex flex-row justify-content-between" style="width: 100%;">
+        <!-- Search Bar -->
+        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tên nhân viên hoặc bộ phận..."
+        class="search-bar" />
         <button class="btn btn-success me-3" type="button" @click="openModal">
           Thêm nhân viên
         </button>
-        <!-- Search Bar -->
-        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tên nhân viên hoặc bộ phận..."
-          class="search-bar" />
       </div>
     </nav>
     <div class="table-responsive-md mt-2">
