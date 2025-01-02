@@ -104,13 +104,13 @@
     <AddCriteriasModal
       :is-visible="isAddCriteriaModalVisible"
       @close="closeAddCriteriaModal"
-      @criteria-added="fetchCriterias"
+      @criteria-added="fetchDepartments"
     />
     <EditCriteriasModal
       :is-visible1="isModalVisible1"
       :criteriasData="selectedCriterias"
       @close="closeCriteriasEditModal"
-      @criterias-edited="fetchCriterias"
+      @criteria-edited="fetchDepartments"
     />
   </div>
 </template>
@@ -219,6 +219,7 @@ export default {
       if (result.isConfirmed) {
         try {
           const res = await CriteriasService.deletedCriterias(id);
+          console.log("res: ", res)
           if (res.status === 204) {
             toast.success("Tiêu chí đã được xóa thành công.", {
               autoClose: 2000,
