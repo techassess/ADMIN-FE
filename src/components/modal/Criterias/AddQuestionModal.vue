@@ -113,6 +113,7 @@ export default {
   },
   methods: {
     async addQuestion() {
+      const depart_Id = localStorage.getItem("selectedDepartmentId")
       this.validateQuestion();
       this.validatePoint();
       this.localQuestion.answers.forEach((answer) =>
@@ -122,7 +123,7 @@ export default {
         toast.warning("Vui lòng sửa các lỗi trước khi lưu.");
         return;
       }
-
+ 
       // Cấu trúc dữ liệu câu hỏi và câu trả lời
       const payload = {
         title: this.localQuestion.title,
@@ -132,6 +133,7 @@ export default {
           title: answer.title,
           value: answer.value,
         })),
+        departmentId:depart_Id,
       };
 
       try {

@@ -170,11 +170,13 @@ export default {
   methods: {
     async fetchCriteriaDetail() {
       const id = this.$route.params.id;
-      const department_id = this.$route.params.selectedDepartmentId;
-      
+      const department_id = localStorage.getItem("selectedDepartmentId");   
+
       try {
         const response = await CriteriasService.fetchCriteriasById(id, department_id);
-        if (response.code === 1010) {
+        console.log(response);
+        
+        if (response.code == 1010) {
           this.criteriaDetail = response.data;
         } else {
           console.error("Lỗi khi lấy chi tiết tiêu chí:", response.message);

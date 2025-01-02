@@ -31,9 +31,8 @@ const CriteriasService = {
     }
   },
 
-  fetchCriteriasById: async (id) => {
+  fetchCriteriasById: async (id, department_id) => {
     try {
-      let department_id = JSON.parse(localStorage.getItem("department_id"))
       const response = await axios.get(
         `http://localhost:8080/api/criterias/${id}/${department_id}`
       );
