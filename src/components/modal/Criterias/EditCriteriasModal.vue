@@ -3,9 +3,18 @@
     <h2 class="mb-4 bg-primary">Cập nhật tiêu chí</h2>
     <form @submit.prevent="updateCriteria">
       <div class="mb-3">
-        <label for="title" class="form-label d-flex text-start">Tên tiêu chí:</label>
-        <input type="text" id="title" v-model="criteria.title" class="form-control" @blur="validateTitle"
-          @input="clearServerError" :class="{ 'is-invalid': errors.title || serverErrors.title }" />
+        <label for="title" class="form-label d-flex text-start"
+          >Tên tiêu chí:</label
+        >
+        <input
+          type="text"
+          id="title"
+          v-model="criteria.title"
+          class="form-control"
+          @blur="validateTitle"
+          @input="clearServerError"
+          :class="{ 'is-invalid': errors.title || serverErrors.title }"
+        />
         <div class="invalid-feedback" v-if="errors.title || serverErrors.title">
           {{ errors.title || serverErrors.title }}
         </div>
@@ -13,13 +22,17 @@
 
       <div class="mb-3">
         <label for="criteriaType" class="form-label">Hiển thị cho</label>
-        <select class="form-control" id="criteriaType" v-model="criteria.visibleFor"
-          :class="{ 'is-invalid': errors.type }">
-          <!-- <option :value="null" selected disabled> --- Vui lòng chọn --- </option> -->
-          <option value="ALL_MEMBER">Tất cả thành viên</option>
+        <select
+          class="form-control"
+          id="criteriaType"
+          v-model="criteria.visibleFor"
+          :class="{ 'is-invalid': errors.type }"
+        >
+          <option value="">Vui lòng chọn</option>
+          <option value="ALL_MEMBER">Tất cả nhân viên</option>
+          <option value="SELF">Tự đánh giá</option>
           <option value="CROSS">Đánh giá chéo</option>
-          <option value="SELF">Cá nhân</option>
-          <option value="MANAGER" selected>Quản lý</option>
+          <option value="MANAGER">Quản lý trực tiếp</option>
         </select>
         <div class="invalid-feedback" v-if="errors.type">
           {{ errors.type }}
@@ -27,7 +40,11 @@
       </div>
 
       <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary me-2" :disabled="hasErrors">
+        <button
+          type="submit"
+          class="btn btn-primary me-2"
+          :disabled="hasErrors"
+        >
           Cập nhật
         </button>
         <button type="button" class="btn btn-secondary" @click="closeForm">
@@ -54,7 +71,7 @@ export default {
         id: null,
         title: "",
         point: 0,
-        visibleFor: ""
+        visibleFor: "",
       },
       errors: {
         title: null,
@@ -81,9 +98,12 @@ export default {
       }
 
       try {
-        // await CriteriasService.updateCriterias(this.criteria.id, this.criteria);
         const departmentId = localStorage.getItem("selectedDepartmentId");
-        await CriteriasService.updateCriteriaInDepartment(this.criteria.id, departmentId, this.criteria);
+        await CriteriasService.updateCriteriaInDepartment(
+          this.criteria.id,
+          departmentId,
+          this.criteria
+        );
         toast.success("Cập nhật thành công!", {
           autoClose: 2000,
         });
@@ -92,7 +112,6 @@ export default {
       } catch (error) {
         console.error("Error updating criteria:", error);
 
-        // Xử lý lỗi từ server (chỉ quan tâm đến title)
         if (error.response && error.response.data) {
           this.serverErrors.title = error.response.data.error || null;
         }

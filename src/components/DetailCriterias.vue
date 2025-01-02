@@ -9,9 +9,9 @@
     <div class="content mt-4">
       <h4><strong>Tiêu đề:</strong> {{ criteriaDetail.title }}</h4>
       <h4 class="mb-3"><strong>Số điểm:</strong> {{ criteriaDetail.point }}</h4>
-      <div class="d-flex justify-content-start mb-3">
+      <div class="d-flex justify-content-end mb-3">
         <button
-          class="btn btn-success me-3"
+          class="btn btn-success me-3 "
           type="button"
           @click="openAddQuestionModal"
         >
