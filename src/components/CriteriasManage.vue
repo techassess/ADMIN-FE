@@ -42,7 +42,7 @@
           <tr>
             <th scope="col">STT</th>
             <th scope="col">Tên tiêu chí đánh giá</th>
-            <th scope="col">Loại tiêu chí đánh giá</th>
+            <th scope="col">Hiển thị cho</th>
             <th scope="col">Số điểm</th>
             <th scope="col">Tác vụ</th>
           </tr>
@@ -123,12 +123,12 @@
 
 <script>
 // Đảm bảo bạn đã thêm criteriaTranslation vào data
-import EditCriteriasModal from "./modal/Criterias/EditCriteriasModal.vue";
-import Swal from "sweetalert2";
 import CriteriasService from "@/services/CriteriasService";
-import AddCriteriasModal from "./modal/Criterias/AddCriteriasModal.vue";
+import Swal from "sweetalert2";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import AddCriteriasModal from "./modal/Criterias/AddCriteriasModal.vue";
+import EditCriteriasModal from "./modal/Criterias/EditCriteriasModal.vue";
 
 export default {
   components: {
@@ -213,6 +213,7 @@ export default {
         this.criterias = this.selectedDepartment.criteria.filter(
           (criteria) => !criteria.deleted
         );
+        this.criterias.sort((a, b) => b.point - a.point)
       } else {
         this.criterias = [];
       }

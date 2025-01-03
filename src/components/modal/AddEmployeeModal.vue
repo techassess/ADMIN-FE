@@ -78,7 +78,6 @@
                     <option v-for="project in projects" :key="project.id" :value="project.name">
                       {{ project.name }}
                     </option>
-                  </select>
                 </div> -->
                 <div class="col-md-6 mb-3">
                   <label for="employeeGender" class="form-label">Gender</label>
@@ -108,8 +107,8 @@
 </template>
 
 <script>
-import Swal from "sweetalert2";
 import UserService from "@/services/UserService";
+import Swal from "sweetalert2";
 
 export default {
   name: "AddEmployee",
