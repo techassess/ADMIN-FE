@@ -24,11 +24,11 @@
             <i class="bi bi-people"></i> Quản lý tiêu chí
           </router-link>
         </li> 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <router-link to="/logout" class="nav-link" active-class="active">
             <i class="bi bi-box-arrow-right"></i> Đăng xuất
           </router-link>
-        </li>
+        </li> -->
       </ul>
     </div>
   </aside>
