@@ -123,10 +123,10 @@ export default {
       try {
         const res = await CriteriasService.addCriteria(payload);
         if (res.code) {
+          this.closeModal();
           this.$emit("criteria-added");
           toast.success("Thêm tiêu chí thành công!", { autoClose: 2000 });
           this.resetForm();
-          setTimeout(() => this.closeModal(), 1500);
         }
       } catch (error) {
         console.error("Lỗi khi thêm tiêu chí:", error.response.data);

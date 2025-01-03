@@ -1,5 +1,6 @@
 <template>
-  <div v-if="isVisible1" class="criteria-edit container mt-4 overlay">
+  <div v-if="isVisible1" class="modal-backdrop">
+  <div class="criteria-edit container mt-4 overlay">
     <h2 class="mb-4 bg-primary">Cập nhật tiêu chí</h2>
     <form @submit.prevent="updateCriteria">
       <div class="mb-3">
@@ -53,12 +54,13 @@
       </div>
     </form>
   </div>
+  </div>
 </template>
 
 <script>
+import CriteriasService from "@/services/CriteriasService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import CriteriasService from "@/services/CriteriasService";
 
 export default {
   props: {
@@ -176,5 +178,17 @@ export default {
 .invalid-feedback {
   color: #dc3545;
   font-size: 0.875em;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
