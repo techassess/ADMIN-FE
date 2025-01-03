@@ -34,9 +34,9 @@
 
 <script>
 //import Swal from "sweetalert2";
+import DepartmentsService from "@/services/DepartmentsService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import DepartmentsService from "@/services/DepartmentsService";
 
 export default {
   name: "AddDepartmentsModal",
@@ -133,5 +133,16 @@ export default {
 .invalid-feedback {
   color: #dc3545;
   font-size: 0.875em;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

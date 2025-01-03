@@ -42,10 +42,9 @@
                 <select
                   class="form-control"
                   id="criteriaType"
-                  v-model="criteria.visible_for"
+                  v-model="visibleFor"
                   :class="{ 'is-invalid': errors.type }"
                 >
-                  <option value="">Vui lòng chọn</option>
                   <option value="ALL_MEMBER">Tất cả nhân viên</option>
                   <option value="SELF">Tự đánh giá</option>
                   <option value="CROSS">Đánh giá chéo</option>
@@ -85,12 +84,13 @@ export default {
   },
   data() {
     return {
+      visibleFor: "ALL_MEMBER",
       criteria: {
         departmentId: null,
         criteriaReqDTO: {
-          title: null,
+        visibleFor: "ALL_MEMBER",
+        title: null,
         },
-        visible_for: "",
       },
       errors: {
         title: null,
@@ -115,9 +115,9 @@ export default {
       const payload = {
         departmentId: depart_Id,
         criteriaReqDTO: {
-          title: this.criteria.title,
+        visibleFor: this.visibleFor,
+        title: this.criteria.title,
         },
-        visible_for: this.criteria.visible_for,
       };
 
       try {
@@ -171,5 +171,16 @@ export default {
 .dropdown-menu {
   width: 100%;
   box-sizing: border-box;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
