@@ -84,7 +84,7 @@ export default {
   },
   data() {
     return {
-      visibleFor: "MANAGER",
+      visibleFor: "ALL_MEMBER",
       criteria: {
         departmentId: null,
         criteriaReqDTO: {
