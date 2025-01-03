@@ -42,7 +42,7 @@
                 <select
                   class="form-control"
                   id="criteriaType"
-                  v-model="criteria.visible_for"
+                  v-model="criteria.visibleFor"
                   :class="{ 'is-invalid': errors.type }"
                 >
                   <option value="">Vui lòng chọn</option>
@@ -88,9 +88,9 @@ export default {
       criteria: {
         departmentId: null,
         criteriaReqDTO: {
-          title: null,
+        visibleFor: "",
+        title: null,
         },
-        visible_for: "",
       },
       errors: {
         title: null,
@@ -115,9 +115,9 @@ export default {
       const payload = {
         departmentId: depart_Id,
         criteriaReqDTO: {
-          title: this.criteria.title,
+        visibleFor: this.criteria.visibleFor,
+        title: this.criteria.title,
         },
-        visible_for: this.criteria.visible_for,
       };
 
       try {

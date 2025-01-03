@@ -42,7 +42,7 @@
           <tr>
             <th scope="col">STT</th>
             <th scope="col">Tên tiêu chí đánh giá</th>
-            <th scope="col">Loại tiêu chí đánh giá</th>
+            <th scope="col">Hiển thị cho</th>
             <th scope="col">Số điểm</th>
             <th scope="col">Tác vụ</th>
           </tr>
