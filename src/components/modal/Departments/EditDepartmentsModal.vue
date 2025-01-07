@@ -1,39 +1,75 @@
 <template>
-  <div v-if="isVisible1" class="department-edit container mt-4 overlay">
-    <h2 class="mb-4 bg-primary">Cập nhật phòng ban</h2>
-    <form @submit.prevent="updateDepartment">
-      <div class="mb-3">
-        <label for="name" class="form-label d-flex text-start">Tên phòng ban:</label>
-        <input
-          type="text"
-          id="name"
-          v-model="department.name"
-          class="form-control"
-          @blur="validatename"
-          @input="clearServerError"
-          :class="{ 'is-invalid': errors.name || serverErrors.name }"
-        />
-        <div class="invalid-feedback" v-if="errors.name || serverErrors.name">
-          {{ errors.name || serverErrors.name }}
+  <div v-if="isVisible1" class="modal-backdrop">
+    <div
+      class="modal fade show"
+      tabindex="-1"
+      aria-hidden="false"
+      style="display: block"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="border-bottom: solid 0.05em gray">
+            <h5 class="modal-name">Cập nhật phòng ban</h5>
+            <button
+              type="button"
+              class="btn-close"
+              @click="closeForm"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="name" class="form-label d-flex text-start"
+                  >Tên phòng ban:</label
+                >
+                <input
+                  type="text"
+                  id="name"
+                  v-model="department.name"
+                  class="form-control"
+                  @blur="validatename"
+                  @input="clearServerError"
+                  :class="{ 'is-invalid': errors.name || serverErrors.name }"
+                />
+                <div
+                  class="invalid-feedback"
+                  v-if="errors.name || serverErrors.name"
+                >
+                  {{ errors.name || serverErrors.name }}
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="d-flex justify-content-end">
+              <button
+                type="submit"
+                class="btn btn-primary me-2"
+                :disabled="hasErrors"
+                @click="updateDepartment"
+              >
+                Cập nhật
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                @click="closeForm"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary me-2" :disabled="hasErrors">
-          Cập nhật
-        </button>
-        <button type="button" class="btn btn-secondary" @click="closeForm">
-          Đóng
-        </button>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
+import departmentsService from "@/services/DepartmentsService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import departmentsService from "@/services/DepartmentsService";
 
 export default {
   props: {
@@ -44,14 +80,14 @@ export default {
     return {
       department: {
         id: null,
-        name: ""
+        name: "",
       },
       errors: {
         name: null,
         point: null,
       },
       serverErrors: {
-        name: null, 
+        name: null,
       },
     };
   },
@@ -71,10 +107,13 @@ export default {
       }
 
       try {
-        await departmentsService.updateDepartments(this.department.id, this.department);
+        await departmentsService.updateDepartments(
+          this.department.id,
+          this.department
+        );
         toast.success("Cập nhật thành công!", {
-            autoClose: 2000,
-          });
+          autoClose: 2000,
+        });
         this.$emit("department-edited");
         this.closeForm();
       } catch (error) {
@@ -140,5 +179,16 @@ export default {
 .invalid-feedback {
   color: #dc3545;
   font-size: 0.875em;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

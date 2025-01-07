@@ -4,20 +4,24 @@
   </div>
   <div class="content">
     <nav class="navbar navbar-light mt-3">
-      <select
-        class="p-2 pe-3 rounded-3"
-        aria-label="Default select example"
-        v-model="selectedDepartmentId"
-        @change="handleDepartmentChange"
-      >
-        <option
-          v-for="department in departments"
-          :key="department.id"
-          :value="department.id"
+      <div class="">
+        <label for="select_opt" class="pe-3"><strong>Phòng ban</strong></label>
+        <select
+          class="p-2 pe-3 rounded-5 "
+          aria-label="Default select example"
+          v-model="selectedDepartmentId"
+          @change="handleDepartmentChange"
+          id="select_opt"
         >
-          {{ department.name }}
-        </option>
-      </select>
+          <option
+            v-for="department in departments"
+            :key="department.id"
+            :value="department.id"
+          >
+            {{ department.name }}
+          </option>
+        </select>
+      </div>
       <input
         type="text"
         v-model="searchQuery"
@@ -38,7 +42,7 @@
           <tr>
             <th scope="col">STT</th>
             <th scope="col">Tên tiêu chí đánh giá</th>
-            <th scope="col">Loại tiêu chí đánh giá</th>
+            <th scope="col">Hiển thị cho</th>
             <th scope="col">Số điểm</th>
             <th scope="col">Tác vụ</th>
           </tr>
@@ -50,7 +54,9 @@
           >
             <td>{{ index + 1 }}</td>
             <td class="text-start">{{ criteria.title }}</td>
-            <td class="text-start">{{ criteria.visibleFor }}</td>
+            <td class="text-start">
+              {{ criteriaTranslation[criteria.visibleFor] }}
+            </td>
             <td>{{ criteria.point }}</td>
             <td>
               <button class="btn btn-primary me-3">
@@ -116,12 +122,13 @@
 </template>
 
 <script>
-import EditCriteriasModal from "./modal/Criterias/EditCriteriasModal.vue";
-import Swal from "sweetalert2";
+// Đảm bảo bạn đã thêm criteriaTranslation vào data
 import CriteriasService from "@/services/CriteriasService";
-import AddCriteriasModal from "./modal/Criterias/AddCriteriasModal.vue";
+import Swal from "sweetalert2";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import AddCriteriasModal from "./modal/Criterias/AddCriteriasModal.vue";
+import EditCriteriasModal from "./modal/Criterias/EditCriteriasModal.vue";
 
 export default {
   components: {
@@ -134,12 +141,18 @@ export default {
       isAddCriteriaModalVisible: false,
       selectedCriterias: null,
       criterias: [],
-      departments: [], // Danh sách phòng ban
-      selectedDepartmentId: 0, // ID của phòng ban được chọn
-      selectedDepartment: null, // Object của phòng ban được chọn
+      departments: [],
+      selectedDepartmentId: 0,
+      selectedDepartment: null,
       currentPage: 1,
       itemsPerPage: 10,
-      searchQuery: "", // Dùng cho tìm kiếm tiêu chí
+      searchQuery: "",
+      criteriaTranslation: {
+        ALL_MEMBER: "Tất cả nhân viên",
+        SELF: "Tự đánh giá",
+        CROSS: "Đánh giá chéo",
+        MANAGER: "Quản lý trực tiếp",
+      },
     };
   },
   mounted() {
@@ -179,8 +192,6 @@ export default {
             this.selectedDepartmentId = this.departments[0].id;
           }
 
-          this.fetchDepartments();
-
           // Gọi để cập nhật tiêu chí
           this.handleDepartmentChange();
         }
@@ -202,6 +213,7 @@ export default {
         this.criterias = this.selectedDepartment.criteria.filter(
           (criteria) => !criteria.deleted
         );
+        this.criterias.sort((a, b) => b.point - a.point)
       } else {
         this.criterias = [];
       }
@@ -221,11 +233,12 @@ export default {
       if (result.isConfirmed) {
         try {
           const res = await CriteriasService.deletedCriterias(id);
-          console.log("res: ", res)
+          console.log("res: ", res);
           if (res.status === 204) {
             toast.success("Tiêu chí đã được xóa thành công.", {
               autoClose: 2000,
             });
+            this.fetchDepartments();
             this.handleDepartmentChange();
           }
         } catch (error) {
@@ -377,5 +390,8 @@ export default {
 .modal-body input {
   background-color: #fff;
   width: 100%;
+}
+#select_opt{
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 </style>

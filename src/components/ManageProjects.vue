@@ -3,12 +3,12 @@
       <h2 style="text-align: center">Quản lý danh sách dự án</h2>
     </div>
     <div class="container">
-      <div class="top-bar">
+      <div class="top-bar d-flex flex-row justify-content-between " style="width: 100%;">
+        <!-- Search Bar -->
+        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tên dự án hoặc bộ phận..." class="search-bar" />
         <button class="btn btn-success me-3" @click="showModalAddProject">
           Thêm dự án
         </button>
-        <!-- Search Bar -->
-        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tên dự án hoặc bộ phận..." class="search-bar" />
       </div>
 
       <!-- Table -->

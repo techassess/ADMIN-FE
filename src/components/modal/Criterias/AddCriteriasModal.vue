@@ -22,7 +22,7 @@
           <div class="modal-body">
             <form ref="criteriaForm" class="form" @submit.prevent="addCriteria">
               <div class="mb-3">
-                <label for="title" class="form-label">Tên tiêu chí</label>
+                <label for="title" class="form-label d-flex text-start">Tên tiêu chí</label>
                 <input
                   type="text"
                   class="form-control"
@@ -36,20 +36,19 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label for="criteriaType" class="form-label"
+                <label for="criteriaType" class="form-label d-flex text-start"
                   >Hiển thị cho</label
                 >
                 <select
                   class="form-control"
                   id="criteriaType"
-                  v-model="criteria.visible_for"
+                  v-model="visibleFor"
                   :class="{ 'is-invalid': errors.type }"
                 >
-                  <option value="">Vui lòng chọn</option>
-                  <option value="ALL_MEMBER">Dành cho tất cả</option>
+                  <option value="ALL_MEMBER">Tất cả nhân viên</option>
                   <option value="SELF">Tự đánh giá</option>
                   <option value="CROSS">Đánh giá chéo</option>
-                  <option value="MANAGER">Quản lý</option>
+                  <option value="MANAGER">Quản lý trực tiếp</option>
                 </select>
                 <div class="invalid-feedback" v-if="errors.type">
                   {{ errors.type }}
@@ -70,7 +69,6 @@
 </template>
 
 <script>
-//import Swal from "sweetalert2";
 import CriteriasService from "@/services/CriteriasService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
@@ -85,12 +83,13 @@ export default {
   },
   data() {
     return {
+      visibleFor: "ALL_MEMBER",
       criteria: {
         departmentId: null,
         criteriaReqDTO: {
+          visibleFor: "ALL_MEMBER",
           title: null,
         },
-        visible_for: "",
       },
       errors: {
         title: null,
@@ -111,22 +110,22 @@ export default {
       if (Object.values(this.errors).some((error) => error)) {
         return;
       }
-      const depart_Id = localStorage.getItem("selectedDepartmentId")
+      const depart_Id = localStorage.getItem("selectedDepartmentId");
       const payload = {
-        departmentId: depart_Id, 
+        departmentId: depart_Id,
         criteriaReqDTO: {
+          visibleFor: this.visibleFor,
           title: this.criteria.title,
         },
-        visible_for:this.criteria.visible_for
       };
 
       try {
         const res = await CriteriasService.addCriteria(payload);
         if (res.code) {
+          this.closeModal();
           this.$emit("criteria-added");
           toast.success("Thêm tiêu chí thành công!", { autoClose: 2000 });
           this.resetForm();
-          setTimeout(() => this.closeModal(), 1500);
         }
       } catch (error) {
         console.error("Lỗi khi thêm tiêu chí:", error.response.data);
@@ -171,5 +170,16 @@ export default {
 .dropdown-menu {
   width: 100%;
   box-sizing: border-box;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
