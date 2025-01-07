@@ -26,7 +26,7 @@
               @submit.prevent="addDepartment"
             >
               <div class="mb-3">
-                <label for="name" class="form-label">Tên phòng ban</label>
+                <label for="name" class="form-label d-flex text-start">Tên phòng ban</label>
                 <input
                   type="text"
                   class="form-control"
