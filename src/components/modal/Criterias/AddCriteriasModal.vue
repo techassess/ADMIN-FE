@@ -69,7 +69,6 @@
 </template>
 
 <script>
-//import Swal from "sweetalert2";
 import CriteriasService from "@/services/CriteriasService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";

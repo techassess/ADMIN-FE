@@ -191,7 +191,6 @@ export default {
   overflow-y: auto;
   animation: fadeIn 0.3s ease-in-out;
 }
-
 @keyframes fadeIn {
   from {
     opacity: 0;
