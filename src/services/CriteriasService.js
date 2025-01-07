@@ -31,9 +31,8 @@ const CriteriasService = {
     }
   },
 
-  fetchCriteriasById: async (id) => {
+  fetchCriteriasById: async (id, department_id) => {
     try {
-      let department_id = JSON.parse(localStorage.getItem("department_id"))
       const response = await axios.get(
         `http://localhost:8080/api/criterias/${id}/${department_id}`
       );
@@ -59,6 +58,27 @@ const CriteriasService = {
       throw error;
     }
   },
+  updateCriteriaInDepartment: async (critediaId, departmentId, criteriaReqDto) => {
+    try {
+      const dto = {
+        criteriaReqDTO: {
+          title: criteriaReqDto.title,
+          visibleFor: criteriaReqDto.visibleFor
+        },
+        criteriaId: critediaId,
+        departmentId: departmentId
+      };
+
+      const response = await axios.put(
+        `http://localhost:8080/api/criterias/update-criterion-in-department`,
+        dto
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating criteria:", error);
+      throw error;
+    }
+  },
 
   // department
   fetchDepartment: async () => {
@@ -70,7 +90,7 @@ const CriteriasService = {
     }
   },
 
-  
+
 };
 
 export default CriteriasService;

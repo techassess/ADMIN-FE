@@ -44,7 +44,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(criteria, index) in paginatedCriterias" :key="criteria.id">
+          <tr
+            v-for="(criteria, index) in paginatedCriterias"
+            :key="criteria.id"
+          >
             <td>{{ index + 1 }}</td>
             <td class="text-start">{{ criteria.title }}</td>
             <td class="text-start">{{ criteria.visibleFor }}</td>
@@ -55,7 +58,8 @@
                   :to="`/detail-criterias/${criteria.id}`"
                   class="nav-link"
                   active-class="active"
-                >Chi tiết</router-link>
+                  >Chi tiết</router-link
+                >
               </button>
 
               <a
@@ -100,13 +104,13 @@
     <AddCriteriasModal
       :is-visible="isAddCriteriaModalVisible"
       @close="closeAddCriteriaModal"
-      @criteria-added="fetchCriterias"
+      @criteria-added="fetchDepartments"
     />
     <EditCriteriasModal
       :is-visible1="isModalVisible1"
       :criteriasData="selectedCriterias"
       @close="closeCriteriasEditModal"
-      @criterias-edited="fetchCriterias"
+      @criteria-edited="fetchDepartments"
     />
   </div>
 </template>
@@ -153,34 +157,50 @@ export default {
     },
   },
   methods: {
-    // Lấy danh sách phòng ban từ API
     async fetchDepartments() {
       try {
         const response = await CriteriasService.fetchDepartment();
         if (response.code === 1010) {
           this.departments = response.data;
 
-          if (this.departments.length > 0) {
+          // Kiểm tra giá trị từ localStorage
+          const savedDepartmentId = localStorage.getItem(
+            "selectedDepartmentId"
+          );
+          if (
+            savedDepartmentId &&
+            this.departments.some(
+              (dept) => dept.id === parseInt(savedDepartmentId, 10)
+            )
+          ) {
+            this.selectedDepartmentId = parseInt(savedDepartmentId, 10);
+          } else if (this.departments.length > 0) {
+            // Nếu không có giá trị hợp lệ, mặc định chọn phòng ban đầu tiên
             this.selectedDepartmentId = this.departments[0].id;
-            
-            this.handleDepartmentChange();
           }
+
+          this.fetchDepartments();
+
+          // Gọi để cập nhật tiêu chí
+          this.handleDepartmentChange();
         }
       } catch (error) {
         console.error("Error fetching departments:", error);
       }
     },
 
-    // Cập nhật tiêu chí dựa trên phòng ban được chọn
     handleDepartmentChange() {
+      // Lưu giá trị mới vào localStorage
+      localStorage.setItem("selectedDepartmentId", this.selectedDepartmentId);
+
+      // Tìm phòng ban tương ứng
       this.selectedDepartment = this.departments.find(
         (dept) => dept.id === this.selectedDepartmentId
       );
 
       if (this.selectedDepartment) {
         this.criterias = this.selectedDepartment.criteria.filter(
-          (criteria) => !criteria.deleted,
-          localStorage.setItem("department_id",this.selectedDepartmentId)
+          (criteria) => !criteria.deleted
         );
       } else {
         this.criterias = [];
