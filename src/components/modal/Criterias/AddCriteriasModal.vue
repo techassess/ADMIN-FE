@@ -22,7 +22,7 @@
           <div class="modal-body">
             <form ref="criteriaForm" class="form" @submit.prevent="addCriteria">
               <div class="mb-3">
-                <label for="title" class="form-label">Tên tiêu chí</label>
+                <label for="title" class="form-label d-flex text-start">Tên tiêu chí</label>
                 <input
                   type="text"
                   class="form-control"
@@ -36,7 +36,7 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label for="criteriaType" class="form-label"
+                <label for="criteriaType" class="form-label d-flex text-start"
                   >Hiển thị cho</label
                 >
                 <select
@@ -88,8 +88,8 @@ export default {
       criteria: {
         departmentId: null,
         criteriaReqDTO: {
-        visibleFor: "ALL_MEMBER",
-        title: null,
+          visibleFor: "ALL_MEMBER",
+          title: null,
         },
       },
       errors: {
@@ -115,8 +115,8 @@ export default {
       const payload = {
         departmentId: depart_Id,
         criteriaReqDTO: {
-        visibleFor: this.visibleFor,
-        title: this.criteria.title,
+          visibleFor: this.visibleFor,
+          title: this.criteria.title,
         },
       };
 
