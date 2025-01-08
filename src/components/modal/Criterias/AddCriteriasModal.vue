@@ -110,9 +110,9 @@ export default {
       if (Object.values(this.errors).some((error) => error)) {
         return;
       }
-      const depart_Id = localStorage.getItem("selectedDepartmentId");
+      const depart_Id = localStorage.getItem("selectedDepartmentId")
       const payload = {
-        departmentId: depart_Id,
+        departmentId: depart_Id, 
         criteriaReqDTO: {
           visibleFor: this.visibleFor,
           title: this.criteria.title,

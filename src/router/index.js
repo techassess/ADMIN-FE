@@ -5,7 +5,7 @@ import CriteriasManage from '@/components/CriteriasManage.vue';
 import DetailCriterias from '@/components/DetailCriterias.vue';
 import EmployeeManager from '@/components/EmployeeManager.vue';
 import ManageProjects from '@/components/ManageProjects.vue';
-import DetailAssess from '@/components/DetailAssess.vue';
+import DetailUserRating from '@/components/DetailUserRating.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
 
@@ -17,12 +17,12 @@ const routes = [
   { path: "/departments-manage", component: DepartmentsManage },
   { path: "/criterias-manage", component: CriteriasManage },
   { path: "/detail-criterias/:id", component: DetailCriterias },
-  { path: "/assess-detail/:id", component: DetailAssess },
+  { path: "/detail-user-rating/:userId", component: DetailUserRating },
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+  history: createWebHistory(),
+  routes,
 });
 
 export default router;

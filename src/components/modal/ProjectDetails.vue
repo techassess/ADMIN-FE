@@ -54,7 +54,7 @@
                 <div class="d-flex">
                   <button class="btn btn-info me-3">
                     <router-link
-                      :to="`/assess-detail/${member.id}`"
+                      :to="`/detail-user-rating/${member.id}`"
                       class="nav-link"
                       active-class="active"
                       >Xem đánh giá</router-link

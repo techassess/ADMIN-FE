@@ -29,7 +29,7 @@ export default {
 }
 .sidebar{
   width: 15%;
-  
+  min-width: 15em;
 }
 .main-content {
   margin-left: 15%;
