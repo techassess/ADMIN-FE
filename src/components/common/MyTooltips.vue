@@ -1,6 +1,6 @@
 <template>
     <a href="#" class="my-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" :title="description">
-        <img src="../../assets/question.png" alt="" height="16px" width="16px">
+        <i class="fa-regular fa-circle-question"></i>
     </a>
 </template>
 
