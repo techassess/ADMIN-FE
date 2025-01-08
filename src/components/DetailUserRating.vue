@@ -96,7 +96,7 @@ export default {
            */
           const dto = resp.data;
           this.overallRatedResDto = dto;
-          console.log(this.overallRatedResDto);
+          // console.log(this.overallRatedResDto);
         }
       } catch (e) {
         console.log(e);
