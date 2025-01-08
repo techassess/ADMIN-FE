@@ -119,6 +119,8 @@
 
     <RadarChart />
   </div>
+  <RadarChart />
+
 </template>
 
 <script>
@@ -204,6 +206,45 @@ export default {
 </script>
 
 <style scoped>
+.my-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  max-height: 1000vh;
+  text-align: left;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.my-table th,
+.my-table td {
+  padding: 7px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: center;
+}
+
+.my-table th {
+  background-color: #000066;
+  color: white;
+  font-weight: 600;
+  font-size: 20px;
+  /* cursor: pointer; */
+}
+
+.my-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.my-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+
+
 .my-tooltip {
   position: relative;
   display: inline-block;
