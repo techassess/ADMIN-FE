@@ -61,6 +61,8 @@
       </tbody>
     </table>
 
+    <RadarChart />
+
   </div>
 </template>
 
@@ -68,10 +70,11 @@
 import OverallRatedResDto from '@/model/OverallRatedResDto';
 import RatedRankService from '@/services/RatedRankService';
 import MyTooltips from '@/components/common/MyTooltips.vue';
+import RadarChart from './RadarChart.vue';
 
 export default {
   name: "DetailUserRating",
-  components: { MyTooltips },
+  components: { MyTooltips, RadarChart },
   data() {
     return {
       /**
