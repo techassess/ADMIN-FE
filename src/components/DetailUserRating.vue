@@ -163,7 +163,6 @@ export default {
            */
           const dto = resp.data;
           this.overallRatedResDto = dto;
-          // console.log(this.overallRatedResDto);
         }
       } catch (e) {
         console.log(e);
@@ -181,10 +180,6 @@ export default {
           this.userInfo = dto;
           this.projectId = this.userInfo.userProjects[0].projectId;
           this.fetchProject(this.projectId);
-          console.log(
-            "this.fetchProject(this.projectId): ",
-            this.fetchProject(this.projectId)
-          );
         }
       } catch (e) {
         console.log(e);
@@ -199,8 +194,6 @@ export default {
            */
           const dto = resp.data;
           this.projectInfo = dto;
-          // const departmentId = this.projectInfo.department_id;
-          console.log("projectInfo: ", this.projectInfo);
         }
       } catch (e) {
         console.log(e);
