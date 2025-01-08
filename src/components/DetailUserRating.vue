@@ -15,7 +15,7 @@
         />
       </div>
     </div>
-    <div class="col-3" style="text-align: left">
+    <div class="col-5" style="text-align: left">
       <h4>Tên nhân viên: {{ userInfo.name }}</h4>
       <h4>Vị trí: {{ userInfo.rank ? userInfo.rank.position.name : "" }}</h4>
       <h4>
@@ -23,7 +23,7 @@
       </h4>
       <h4>Dự án đang tham gia: {{ projectInfo.name ? projectInfo.name : "" }}</h4>
     </div>
-    <div class="col-5">
+    <div class="col-3">
       <button
         class="btn btn-success me-3"
         type="button"
