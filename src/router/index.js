@@ -5,6 +5,8 @@ import CriteriasManage from '@/components/CriteriasManage.vue';
 import DetailCriterias from '@/components/DetailCriterias.vue';
 import EmployeeManager from '@/components/EmployeeManager.vue';
 import ManageProjects from '@/components/ManageProjects.vue';
+import DetailUserRating from '@/components/DetailUserRating.vue';
+
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
@@ -12,14 +14,15 @@ const routes = [
   { path: "/projects-manage", component: ManageProjects },
   { path: "/assess-page", component: AssessPage },
   { path: "/assess-date-manage", component: AssessDateManage },
-  { path: "/departments-manage", component: DepartmentsManage},
+  { path: "/departments-manage", component: DepartmentsManage },
   { path: "/criterias-manage", component: CriteriasManage },
   { path: "/detail-criterias/:id", component: DetailCriterias },
+  { path: "/detail-user-rating/:userId", component: DetailUserRating },
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+  history: createWebHistory(),
+  routes,
 });
 
 export default router;

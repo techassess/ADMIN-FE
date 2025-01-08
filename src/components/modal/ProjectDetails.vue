@@ -47,11 +47,18 @@
               </td>
               <td>{{ member.name }}</td>
               <td>{{ member.rank ? member.rank.position.name : "N/A" }}</td>
-              <td class="small-col">{{ member.rank ? member.rank.level : "N/A" }}</td>
+              <td class="small-col">
+                {{ member.rank ? member.rank.level : "N/A" }}
+              </td>
               <td>
                 <div class="d-flex">
-                  <button type="button" class="btn btn-info me-3">
-                    Xem đánh giá
+                  <button class="btn btn-info me-3">
+                    <router-link
+                      :to="`/detail-user-rating/${member.id}`"
+                      class="nav-link"
+                      active-class="active"
+                      >Xem đánh giá</router-link
+                    >
                   </button>
                   <button type="button" class="btn btn-danger">Xoá</button>
                 </div>
@@ -111,7 +118,7 @@ export default {
           console.log(this.filteredDetails);
         }
       });
-    //   console.log(this.filteredDetails);
+      //   console.log(this.filteredDetails);
     },
     submitForm() {
       // Kiểm tra tính hợp lệ của dữ liệu
