@@ -1,10 +1,40 @@
 <template>
   <div style="border-bottom: solid gray">
-    <h2 class="mt-2 text-center">
-      Chi tiết đánh giá cá nhân
-    </h2>
+    <h2 class="mt-2 text-center">Chi tiết tiêu chí đánh giá</h2>
   </div>
-
+  <!-- Chi tiết nhân viên -->
+  <br />
+  <br />
+  <div class="row">
+    <div class="col-4 d-flex justify-content-center align-items-center">
+      <div class="avatar">
+        <img
+          :src="userInfo.fileInfo?.fileUrl || 'default-avatar.png'"
+          alt="avatar"
+          class="img-fluid"
+        />
+      </div>
+    </div>
+    <div class="col-5" style="text-align: left">
+      <h4>Tên nhân viên: {{ userInfo.name }}</h4>
+      <h4>Vị trí: {{ userInfo.rank ? userInfo.rank.position.name : "" }}</h4>
+      <h4>
+        Level: {{ userInfo.rank ? userInfo.rank.level : "Not available" }}
+      </h4>
+      <h4>Dự án đang tham gia: {{ projectInfo.name ? projectInfo.name : "" }}</h4>
+    </div>
+    <div class="col-3">
+      <button
+        class="btn btn-success me-3"
+        type="button"
+        @click="goBack"
+      >
+        Quay lại
+      </button>
+    </div>
+  </div>
+  <br />
+  <br />
   <div class="content">
     <div class="mt-2">
       <table class="table table-hover table-bordered my-table">
@@ -72,10 +102,12 @@
 </template>
 
 <script>
-import OverallRatedResDto from '@/model/OverallRatedResDto';
-import RatedRankService from '@/services/RatedRankService';
-import MyTooltips from '@/components/common/MyTooltips.vue';
-import RadarChart from './RadarChart.vue';
+import OverallRatedResDto from "@/model/OverallRatedResDto";
+import RatedRankService from "@/services/RatedRankService";
+import UserService from "@/services/UserService";
+import ProjectService from "@/services/ProjectService";
+import MyTooltips from "@/components/common/MyTooltips.vue";
+import RadarChart from "./RadarChart.vue";
 
 export default {
   name: "DetailUserRating",
@@ -86,28 +118,68 @@ export default {
        * @type {OverallRatedResDto}
        */
       overallRatedResDto: {},
-    }
+      userInfo: {},
+      projectInfo: {},
+      projectId: null,
+      departmentId: null,
+    };
   },
   mounted() {
     this.fetchData();
+    this.fetchUsser();
   },
   methods: {
+    goBack() {
+    this.$router.push('/projects-manage');
+  },
     async fetchData() {
       try {
-        const resp = await RatedRankService.fetchOverallRated(this.$route.params.userId);
+        const resp = await RatedRankService.fetchOverallRated(
+          this.$route.params.userId
+        );
         if (resp.code) {
           /**
            * @type {OverallRatedResDto}
            */
           const dto = resp.data;
           this.overallRatedResDto = dto;
-          console.log(this.overallRatedResDto);
         }
       } catch (e) {
         console.log(e);
       }
     },
-  }
+
+    async fetchUsser() {
+      try {
+        const resp = await UserService.fetchUserById(this.$route.params.userId);
+        if (resp.code) {
+          /**
+           * @type {OverallRatedResDto}
+           */
+          const dto = resp.data;
+          this.userInfo = dto;
+          this.projectId = this.userInfo.userProjects[0].projectId;
+          this.fetchProject(this.projectId);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async fetchProject(projectId) {
+      try {
+        const resp = await ProjectService.fetchProjectById(projectId);
+        if (resp.code) {
+          /**
+           * @type {OverallRatedResDto}
+           */
+          const dto = resp.data;
+          this.projectInfo = dto;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  },
 };
 </script>
 
@@ -155,5 +227,22 @@ export default {
   position: relative;
   display: inline-block;
   top: 0;
+}
+.avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #007bff;
+  /* Add a border around the avatar */
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>
