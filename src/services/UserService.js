@@ -1,16 +1,12 @@
 import axios from 'axios';
 const UserService = {
-    addUser: async (formData) => {
-       try {
-        const response = await axios.post('http://localhost:8080/api/auths/register', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-        } );
-        return response.data;
-       } catch (error) {
-        console.error(error);
-       }
+    addUser: async (dto) => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/auths/register', dto);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
     },
     deletedUser: async (id) => {
         try {
@@ -36,6 +32,14 @@ const UserService = {
             console.error(error);
         }
     },
+    updateUser: async (reqDto, id) => {
+        try {
+            const response = await axios.put(`http://localhost:8080/api/users/${id}`, reqDto);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
 
 export default UserService;
