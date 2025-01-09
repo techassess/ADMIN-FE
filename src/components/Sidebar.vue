@@ -16,7 +16,7 @@
         </li>
         <li class="nav-item">
           <router-link to="/departments-manage" class="nav-link" active-class="active">
-            <i class="bi bi-people"></i> Quản lý phòng ban
+            <i class="bi bi-people"></i> Quản lý bộ phận
           </router-link>
         </li>
         <li class="nav-item">
