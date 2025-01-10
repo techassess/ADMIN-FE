@@ -96,13 +96,6 @@
               >
                 Cập nhật
               </button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                @click="closeForm"
-              >
-                Đóng
-              </button>
             </div>
           </div>
         </div>
