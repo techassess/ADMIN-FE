@@ -25,11 +25,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @click="closeModal">
-                        Đóng
-                    </button>
                     <button type="submit" class="btn btn-primary" @click="updateProject">
-                        Cập nhật dự án
+                        Cập nhật
                     </button>
                 </div>
             </div>

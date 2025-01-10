@@ -26,7 +26,7 @@
               @submit.prevent="addDepartment"
             >
               <div class="mb-3">
-                <label for="name" class="form-label">Tên phòng ban</label>
+                <label for="name" class="form-label d-flex text-start">Tên phòng ban</label>
                 <input
                   type="text"
                   class="form-control"
@@ -59,7 +59,6 @@
 </template>
 
 <script>
-//import Swal from "sweetalert2";
 import DepartmentsService from "@/services/DepartmentsService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";

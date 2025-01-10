@@ -9,18 +9,23 @@
           </div>
           <div class="modal-body" style="border-bottom: solid 0.05em gray">
             <form ref="employeeForm" class="form" @submit.prevent="submitForm">
-              <div class="mb-3">
-                <label for="avatar" class="form-label">Ảnh đại diện</label>
-                <input type="file" class="form-control" id="avatar" @change="previewImage" accept="image/*" />
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="employeeName" class="form-label">Họ tên</label>
+                  <input type="text" class="form-control" id="employeeName" v-model="employee.name" required
+                    placeholder="Ví dụ: Hồ Xuân Đại" />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="employeeDepartment" class="form-label">Phòng ban</label>
+                  <select class="form-select" v-model="employee.departmentId" id="employeeDepartment" required>
+                    <option value="" disabled required>---- Vui lòng chọn ----</option>
+                    <option v-for="(value, key) in departments" :key="key" :value="value.id">
+                      {{ value.name }}
+                    </option>
+                  </select>
+                </div>
               </div>
-              <div class="mb-3">
-                <img :src="employee.avatar" alt="Profile Picture" class="img-thumbnail" v-if="employee.avatar" />
-              </div>
-              <div class="mb-3">
-                <label for="employeeName" class="form-label">Họ tên</label>
-                <input type="text" class="form-control" id="employeeName" v-model="employee.name" required
-                  placeholder="Ví dụ: Hồ Xuân Đại" />
-              </div>
+
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label for="username" class="form-label">Tên đăng nhập</label>
@@ -50,41 +55,30 @@
                 <div class="col-md-6 mb-3">
                   <label for="employeePosition" class="form-label">Vị trí</label>
                   <select class="form-select" v-model="employee.position">
-                    <option value="FRESHER">Fresher</option>
-                    <option value="JUNIOR">Junior</option>
-                    <option value="INTERN">Middle</option>
-                    <option value="SENIOR">Senior</option>
-                    <option value="LEADER">Leader</option>
-                    <option value="MANAGER">Manager</option>
-
-
+                    <option value="" disabled required>---- Vui lòng chọn ----</option>
+                    <option v-for="(value, key) in positions" :key="key" :value="key">
+                      {{ value }}
+                    </option>
                   </select>
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="level" class="form-label">Cấp bậc</label>
                   <select class="form-select" v-model="employee.level" required>
-                    <option value="1" selected>1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                    <option value="" disabled required>---- Vui lòng chọn ----</option>
+                    <option v-for="level in [1, 2, 3, 4, 5]" :key="level" :value="level">
+                      {{ level }}
+                    </option>
                   </select>
                 </div>
               </div>
               <div class="row">
-                <!-- <div class="col-md-6 mb-3">
-                  <label for="date" class="form-label">Thuộc dự án</label>
-                  <select class="form-select" v-model="employee.project" required>
-                    <option v-for="project in projects" :key="project.id" :value="project.name">
-                      {{ project.name }}
-                    </option>
-                </div> -->
                 <div class="col-md-6 mb-3">
                   <label for="employeeGender" class="form-label">Gender</label>
                   <select class="form-select" v-model="employee.gender">
-                    <option value="MALE">Male</option>
-                    <option value="FEMALE">Female</option>
-                    <option value="OTHER">Other</option>
+                    <option value="" disabled required>---- Vui lòng chọn ----</option>
+                    <option v-for="(value, key) in genders" :key="key" :value="key">
+                      {{ value }}
+                    </option>
                   </select>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -95,7 +89,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" @click="addEmployee">
+            <button type="submit" class="btn btn-primary" @click="addEmployee2">
               Thêm
             </button>
           </div>
@@ -109,6 +103,9 @@
 <script>
 import UserService from "@/services/UserService";
 import Swal from "sweetalert2";
+import EPosition from "@/model/enum/EPosition";
+import EGender from "@/model/enum/EGender";
+import EDepartment from "@/model/enum/EDepartment";
 
 export default {
   name: "AddEmployee",
@@ -131,9 +128,13 @@ export default {
         phoneNumber: "",
         dob: "",
         gender: "",
+        departmentId: "",
       },
       selectedImage: null,
       isLoading: false,
+      positions: EPosition,
+      genders: EGender,
+      departments: EDepartment,
     };
   },
   methods: {
@@ -146,6 +147,38 @@ export default {
       this.selectedImage = file;
       this.employee.avatar = URL.createObjectURL(file);
     },
+
+    async addEmployee2() {
+      this.isLoading = true;
+      const dto = this.employee;
+      try {
+        const res = await UserService.addUser(dto);
+        if (res.code === 201) {
+          this.$emit("employee-added");
+          Swal.fire({
+            title: "Thêm nhân viên thành công!",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+
+          this.resetForm();
+          setTimeout(() => {
+            this.closeModal();
+          }, 1500);
+        }
+      } catch (error) {
+        Swal.fire({
+          title: "Lỗi!",
+          text: "Có lỗi xảy ra khi thêm nhân viên.",
+          icon: "error",
+          confirmButtonText: "Đóng",
+        });
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
     async addEmployee() {
       this.isLoading = true;
       const form = this.$refs.employeeForm;
@@ -182,12 +215,11 @@ export default {
             confirmButtonText: "Đóng",
           });
         } finally {
-          // Đảm bảo isLoading sẽ được đặt lại thành false
-          window.location.reload();
           this.isLoading = false;
         }
       }
     },
+
     submitForm() {
       const newEmployee = JSON.parse(JSON.stringify(this.employee));
       this.$emit("add-employee", newEmployee);

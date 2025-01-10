@@ -22,7 +22,7 @@
           <div class="modal-body">
             <form ref="criteriaForm" class="form" @submit.prevent="addCriteria">
               <div class="mb-3">
-                <label for="title" class="form-label">Tên tiêu chí</label>
+                <label for="title" class="form-label d-flex text-start">Tên tiêu chí</label>
                 <input
                   type="text"
                   class="form-control"
@@ -36,7 +36,7 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label for="criteriaType" class="form-label"
+                <label for="criteriaType" class="form-label d-flex text-start"
                   >Hiển thị cho</label
                 >
                 <select
@@ -69,7 +69,6 @@
 </template>
 
 <script>
-//import Swal from "sweetalert2";
 import CriteriasService from "@/services/CriteriasService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
@@ -88,8 +87,8 @@ export default {
       criteria: {
         departmentId: null,
         criteriaReqDTO: {
-        visibleFor: "ALL_MEMBER",
-        title: null,
+          visibleFor: "ALL_MEMBER",
+          title: null,
         },
       },
       errors: {
@@ -111,12 +110,12 @@ export default {
       if (Object.values(this.errors).some((error) => error)) {
         return;
       }
-      const depart_Id = localStorage.getItem("selectedDepartmentId");
+      const depart_Id = localStorage.getItem("selectedDepartmentId")
       const payload = {
-        departmentId: depart_Id,
+        departmentId: depart_Id, 
         criteriaReqDTO: {
-        visibleFor: this.visibleFor,
-        title: this.criteria.title,
+          visibleFor: this.visibleFor,
+          title: this.criteria.title,
         },
       };
 

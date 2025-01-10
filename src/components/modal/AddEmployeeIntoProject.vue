@@ -1,10 +1,10 @@
 <template>
   <div class="modal-overlay" @click.self="close">
     <div class="modal-container">
-      <button class="close-btn" @click="close">
-        <i class="fas fa-times"></i>
-      </button>
-      <h2 class="modal-title">Thêm nhân viên vào dự án {{ project.name }}</h2>
+      <div class="modal-header d-flex justify-content-between">
+        <h2 class="modal-title">Thêm nhân viên vào dự án {{ project.name }}</h2>
+        <button class="btn-close text-end" @click="close"></button>
+      </div>
       <div class="search-container">
         <input
           type="text"
@@ -14,7 +14,7 @@
         />
       </div>
       <div class="table-container">
-        <table class="employee-table">
+        <table class="table project-table table-hover table-bordered">
           <thead>
             <tr>
               <th class="checkbox">Chọn</th>
@@ -55,6 +55,9 @@
           </tbody>
         </table>
       </div>
+      <div class="buttons">
+        <button class="btn btn-success" @click="addEmployees">Xác nhận</button>
+      </div>
       <div class="pagination">
         <button
           @click="prevPage"
@@ -71,9 +74,6 @@
         >
           <i class="fas fa-arrow-right"></i>
         </button>
-      </div>
-      <div class="buttons">
-        <button class="btn btn-success" @click="addEmployees">Xác nhận</button>
       </div>
     </div>
   </div>
@@ -149,22 +149,14 @@ export default {
       const employeeIds = this.selectedEmployees.map(
         (index) => this.employees[index].id
       );
-
-      console.log("Selected Employee IDs:", employeeIds);
-
       const requestData = {
         employeeIds: employeeIds,
       };
-
-      console.log("Request Data:", requestData);
-
       try {
         const response = await axios.post(
           `${this.apiUrl}/api/projects/${this.project.id}/employees`,
           requestData
         );
-
-        console.log("API Response:", response.data);
         if (response.data.code === 201) {
           const selectedEmployeeDetails = this.selectedEmployees.map(
             (index) => this.employees[index]
@@ -363,5 +355,61 @@ td {
 
 .employee-img {
   width: 35%;
+}
+
+.project-table td {
+  position: relative;
+}
+
+.project-table td .menu-container {
+  margin: 0 auto;
+  /* Center align if necessary */
+}
+.project-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100% !important;
+  max-height: 1000vh;
+  text-align: left;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.project-table th,
+.project-table td {
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: center;
+}
+
+.project-table th {
+  vertical-align: middle;
+  background-color: #000066;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.project-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.project-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.project-table td.project-name {
+  font-weight: bold;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.project-table td.project-name:hover {
+  color: #007bff;
+  background-color: #f0f8ff;
+  cursor: pointer;
 }
 </style>

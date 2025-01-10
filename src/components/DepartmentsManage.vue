@@ -3,28 +3,46 @@
     <h2 style="text-align: center">Quản lý phòng ban</h2>
   </div>
   <div class="content">
-    <nav class="navbar navbar-light mt-3">
-      <input type="text" v-model="searchQuery" placeholder="Tìm kiếm phòng ban..." class="search-bar" />
-      <button class="btn btn-success me-3" type="button" @click="openAddDepartmentModal">
+    <nav class="navbar navbar-light">
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="Tìm kiếm phòng ban..."
+        class="search-bar"
+      />
+      <button
+        class="btn btn-success me-3"
+        type="button"
+        @click="openAddDepartmentModal"
+      >
         Thêm phòng ban
       </button>
     </nav>
-    <div class="table-responsive-md mt-2">
+    <div class="table-responsive-md" style="height: 75vh; width: 100%;">
       <table class="table table-hover table-bordered department-table">
         <thead>
           <tr>
-            <th scope="col">STT</th>
+            <th style="width: 30px;" scope="col">STT</th>
             <th scope="col">Tên phòng ban</th>
-            <th scope="col">Tác vụ</th>
+            <th style="width: 200px;" scope="col">Tác vụ</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(department, index) in departments" :key="department.id">
+          <tr v-for="(department, index) in paginatedDepartments" :key="department.id">
             <td>{{ index + 1 }}</td>
             <td class="text-start">{{ department.name }}</td>
             <td>
-              <a type="button" class="btn btn-warning me-3" @click="editDepartments(department)">Sửa</a>
-              <button type="button" class="btn btn-danger" @click="confirmDeleteDepartments(department.id)">
+              <a
+                type="button"
+                class="btn btn-warning me-3"
+                @click="editDepartments(department)"
+                >Sửa</a
+              >
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="confirmDeleteDepartments(department.id)"
+              >
                 Xoá
               </button>
             </td>
@@ -35,20 +53,35 @@
 
     <!-- Pagination -->
     <div class="pagination-wrapper">
-      <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="pagination-btn"
+      >
         <i class="fas fa-arrow-left"></i>
       </button>
       <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="pagination-btn"
+      >
         <i class="fas fa-arrow-right"></i>
       </button>
     </div>
 
     <!-- Modal Component -->
-    <AddDepartmentModal :is-visible="isAddDepartmentModalVisible" @close="closeAddDepartmentModal"
-      @department-added="fetchDepartments" />
-    <EditDepartmentsModal :is-visible1="isModalVisible1" :departmentsData="selectedDepartment"
-      @close="closeDepartmentsEditModal" @department-edited="fetchDepartments" />
+    <AddDepartmentModal
+      :is-visible="isAddDepartmentModalVisible"
+      @close="closeAddDepartmentModal"
+      @department-added="fetchDepartments"
+    />
+    <EditDepartmentsModal
+      :is-visible1="isModalVisible1"
+      :departmentsData="selectedDepartment"
+      @close="closeDepartmentsEditModal"
+      @department-edited="fetchDepartments"
+    />
   </div>
 </template>
 
@@ -74,7 +107,7 @@ export default {
       selectedDepartment: null, // Object của phòng ban được chọn
       currentPage: 1,
       itemsPerPage: 10,
-      searchQuery: "", // Dùng cho tìm kiếm tiêu chí
+      searchQuery: "",
     };
   },
   mounted() {
@@ -97,11 +130,9 @@ export default {
       try {
         const response = await DepartmentsService.fetchDepartment();
         if (response.status === 200) {
-          // this.departments = response.data;
           this.departments = response.data.data.filter(
             (department) => department.deleted !== true
           );
-          console.log("departments : ", this.departments)
           if (this.departments.length > 0) {
             this.selectedDepartmentId = this.departments[0].id;
             // this.handleDepartmentChange();
@@ -111,20 +142,6 @@ export default {
         console.error("Error fetching departments:", error);
       }
     },
-
-    // handleDepartmentChange() {
-    //   this.selectedDepartment = this.departments.find(
-    //     (dept) => dept.id === this.selectedDepartmentId
-    //   );
-
-    //   if (this.selectedDepartment) {
-    //     this.departments = this.selectedDepartment.department.filter(
-    //       (department) => !department.deleted
-    //     );
-    //   } else {
-    //     this.departments = [];
-    //   }
-    // },
 
     editDepartments(department) {
       this.selectedDepartment = { ...department };
@@ -205,7 +222,7 @@ export default {
 }
 
 .search-bar {
-  padding: 10px;
+  padding: 10px !important;
   width: 350px;
   border-radius: 25px;
   border: 1px solid #ddd;
@@ -233,7 +250,7 @@ export default {
 
 .department-table th,
 .department-table td {
-  padding: 7px;
+  /* padding: 7px; */
   vertical-align: middle;
   border-bottom: 1px solid #f0f0f0;
   text-align: center;
@@ -243,7 +260,7 @@ export default {
   background-color: #000066;
   color: white;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
 }
 
@@ -258,7 +275,6 @@ export default {
 .pagination-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
 }
 
 .pagination-wrapper span {
