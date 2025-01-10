@@ -3,7 +3,7 @@
     <h2 style="text-align: center">Quản lý tiêu chí đánh giá</h2>
   </div>
   <div class="content">
-    <nav class="navbar navbar-light mt-3">
+    <nav class="navbar navbar-light">
       <div class="">
         <label for="select_opt" class="pe-3"><strong>Phòng ban</strong></label>
         <select
@@ -36,15 +36,15 @@
         Thêm tiêu chí
       </button>
     </nav>
-    <div class="table-responsive-md mt-2">
+    <div class="table-responsive-md" style="height: 75vh;width: 100%;">
       <table class="table table-hover table-bordered criteria-table">
         <thead>
           <tr>
-            <th scope="col">STT</th>
+            <th style="width: 30px;" scope="col">STT</th>
             <th scope="col">Tên tiêu chí đánh giá</th>
             <th scope="col">Hiển thị cho</th>
             <th scope="col">Số điểm</th>
-            <th scope="col">Tác vụ</th>
+            <th style="width: 250px;" scope="col">Tác vụ</th>
           </tr>
         </thead>
         <tbody>
@@ -353,7 +353,6 @@ export default {
 .pagination-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
 }
 
 .pagination-wrapper span {

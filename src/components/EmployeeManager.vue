@@ -3,7 +3,7 @@
     <h2 style="text-align: center">Quản lý danh sách nhân viên</h2>
   </div>
   <div class="content">
-    <nav class="navbar navbar-light mt-3">
+    <nav class="navbar navbar-light ">
       <div class="top-bar d-flex flex-row justify-content-between" style="width: 100%;">
         <!-- Search Bar -->
         <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tên nhân viên hoặc bộ phận..."
@@ -13,11 +13,11 @@
         </button>
       </div>
     </nav>
-    <div class="table-responsive-md mt-2">
+    <div class="table-responsive-md " style="height: 75vh;width: 100%;">
       <table class="table table-hover table-bordered employee-table">
         <thead>
           <tr>
-            <th scope="col">STT</th>
+            <th style="width: 30px;" scope="col">STT</th>
             <th scope="col">Ảnh đại diện</th>
             <th scope="col">Tên</th>
             <th scope="col">Vị trí</th>
@@ -25,7 +25,7 @@
             <th scope="col">Dự án hiện tại</th>
             <!-- <th scope="col">Ngày vào công ty</th> -->
             <!-- <th scope="col">Đánh giá</th> -->
-            <th scope="col">Tác vụ</th>
+            <th style="width: 200px;" scope="col">Tác vụ</th>
           </tr>
         </thead>
         <tbody>
@@ -35,7 +35,7 @@
               <img :src="employee.fileInfo ? employee.fileInfo.fileUrl : defaultImg
                 " class="employee-img" />
             </td>
-            <td>{{ employee.name }}</td>
+            <td class="text-start">{{ employee.name }}</td>
             <td>
               {{
                 employee.rank && employee?.rank.position
@@ -339,7 +339,6 @@ export default {
 .pagination-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
 }
 
 .pagination-wrapper span {
