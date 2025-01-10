@@ -2,42 +2,45 @@
   <!-- Project members Modal -->
   <div class="modal-overlay" @click.self="close">
     <div class="modal-container">
-      <button class="close-btn" @click="close">
-        <i class="fas fa-times"></i>
-      </button>
-      <h2 class="project-members-title">
-        Chi tiết nhân viên trong dự án {{ project.name }}
-      </h2>
-      <div class="member-header text-start">
+      <div class="modal-header d-flex justify-content-between">
+        <h2 class="project-members-title">
+          Chi tiết nhân viên trong dự án {{ project.name }}
+        </h2>
+        <button class="btn-close text-end" @click="close"></button>
+      </div>
+      <div
+        class="top-bar d-flex flex-row justify-content-between pt-3 pb-3"
+        style="width: 100%"
+      >
+        <input
+          type="text"
+          v-model="detailSearchQuery"
+          placeholder="Tìm kiếm nhân viên hoặc chức vụ..."
+          class="search-bar"
+        />
         <button
           @click="showAddEmployeeIntoProjectModal"
           class="btn btn-success me-3"
         >
           Thêm nhân viên
         </button>
-        <input
-          type="text"
-          v-model="detailSearchQuery"
-          placeholder="Tìm kiếm nhân viên hoặc chức vụ..."
-          class="search-bar member-search-bar"
-        />
       </div>
       <!-- member Table -->
-      <div class="member-table-container">
-        <table class="member-table">
+      <div class="">
+        <table class="table project-table table-hover table-bordered">
           <thead>
             <tr>
-              <th class="small-col">STT</th>
+              <th style="width: 30px;">STT</th>
               <th>Avatar</th>
               <th @click="sortDetail('name')">Tên NV</th>
               <th @click="sortDetail('position')">Chức vụ</th>
-              <th class="small-col">Bậc</th>
-              <th>Tác vụ</th>
+              <th>Bậc</th>
+              <th style="width: 220px;" >Tác vụ</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(member, index) in filteredDetails" :key="index">
-              <td class="small-col">{{ index + 1 }}</td>
+              <td>{{ index + 1 }}</td>
               <td>
                 <img
                   :src="member.fileInfo ? member.fileInfo.fileUrl : defaultImg"
@@ -45,9 +48,9 @@
                   class="avatar-img"
                 />
               </td>
-              <td>{{ member.name }}</td>
+              <td class="text-start">{{ member.name }}</td>
               <td>{{ member.rank ? member.rank.position.name : "N/A" }}</td>
-              <td class="small-col">
+              <td>
                 {{ member.rank ? member.rank.level : "N/A" }}
               </td>
               <td>
@@ -358,5 +361,71 @@ export default {
 .small-col {
   width: 50px;
   text-align: center;
+}
+.search-bar {
+  padding: 10px;
+  width: 350px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  outline: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+.project-table td {
+  position: relative;
+
+}
+
+.project-table td .menu-container {
+  margin: 0 auto;
+  /* Center align if necessary */
+}
+.project-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100% !important;
+  max-height: 1000vh;
+  text-align: left;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.project-table th,
+.project-table td {
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: center;
+}
+
+.project-table th {
+  vertical-align: middle;
+  background-color: #000066;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.project-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.project-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.project-table td.project-name {
+  font-weight: bold;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.project-table td.project-name:hover {
+  color: #007bff;
+  background-color: #f0f8ff;
+  cursor: pointer;
 }
 </style>

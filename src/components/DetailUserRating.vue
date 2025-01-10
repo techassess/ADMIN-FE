@@ -6,6 +6,12 @@
       </button>
       <h2 class="mt-2 text-center flex-grow-1">Chi tiết tiêu chí đánh giá</h2>
     </div>
+    <div class="d-flex align-items-center justify-content-between">
+      <button class="btn btn-success me-3" type="button" @click="goBack">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="mt-2 text-center flex-grow-1">Chi tiết tiêu chí đánh giá</h2>
+    </div>
   </div>
   <!-- Chi tiết nhân viên -->
   <br />
@@ -17,6 +23,9 @@
           :src="userInfo.fileInfo?.fileUrl || defaultUserImage"
           alt="Avatar"
           class="avatar"
+          :src="userInfo.fileInfo?.fileUrl || defaultUserImage"
+          alt="Avatar"
+          class="avatar"
         />
       </div>
     </div>
@@ -25,6 +34,9 @@
       <h4>Vị trí: {{ userInfo.rank ? userInfo.rank.position.name : "" }}</h4>
       <h4>
         Level: {{ userInfo.rank ? userInfo.rank.level : "Not available" }}
+      </h4>
+      <h4>
+        Dự án đang tham gia: {{ projectInfo.name ? projectInfo.name : "" }}
       </h4>
       <h4>
         Dự án đang tham gia: {{ projectInfo.name ? projectInfo.name : "" }}
@@ -44,7 +56,17 @@
               <MyTooltips
                 description="Số điểm trung bình mà bạn tự đánh giá được cho 1 tiêu chí trên thang 5"
               />
+            <th>
+              Tự đánh giá
+              <MyTooltips
+                description="Số điểm trung bình mà bạn tự đánh giá được cho 1 tiêu chí trên thang 5"
+              />
             </th>
+            <th>
+              Quản Lý
+              <MyTooltips
+                description="Số điểm trung bình mà quản lý đánh giá được cho 1 tiêu chí trên thang 5"
+              />
             <th>
               Quản Lý
               <MyTooltips
@@ -56,13 +78,28 @@
               <MyTooltips
                 description="Số điểm trung bình mà team đánh giá được cho 1 tiêu chí trên thang 5"
               />
+            <th>
+              Team
+              <MyTooltips
+                description="Số điểm trung bình mà team đánh giá được cho 1 tiêu chí trên thang 5"
+              />
             </th>
             <th>
               Điểm đạt được
               <MyTooltips
                 description="Tổng số điểm mà 1 tiêu chí đạt được (dựa trên thang điểm của tiêu chí)"
               />
+            <th>
+              Điểm đạt được
+              <MyTooltips
+                description="Tổng số điểm mà 1 tiêu chí đạt được (dựa trên thang điểm của tiêu chí)"
+              />
             </th>
+            <th>
+              Hệ số
+              <MyTooltips
+                description="Số điểm mà 1 tiêu chí chiếm trong tổng số điểm đánh giá"
+              />
             <th>
               Hệ số
               <MyTooltips
@@ -84,6 +121,13 @@
             <td>{{ row.criteriaPoint }}</td>
           </tr>
           <tr>
+            <td
+              colspan="6"
+              class="bg-warning"
+              style="font-weight: 600; color: black"
+            >
+              Tổng hợp
+            </td>
             <td
               colspan="6"
               class="bg-warning"
