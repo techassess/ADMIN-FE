@@ -2,15 +2,17 @@
   <div class="chart-container">
     <div v-if="loading" class="loading">Đang tải...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
-    <div v-else-if="noData" class="message no-data">Chưa có đánh giá nào cho người dùng này.</div>
+    <div v-else-if="noData" class="message no-data">
+      Chưa có đánh giá nào cho người dùng này.
+    </div>
     <canvas v-else ref="chartCanvas"></canvas>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, reactive } from "vue";
-import { useRoute } from 'vue-router';
-import RatedRankService from '@/services/RatedRankService';
+import { useRoute } from "vue-router";
+import RatedRankService from "@/services/RatedRankService";
 import {
   Chart,
   RadialLinearScale,
@@ -40,7 +42,7 @@ const error = ref(null);
 const noData = ref(false);
 const chartData = reactive({
   labels: [],
-  datasets: []
+  datasets: [],
 });
 
 const fetchData = async () => {
@@ -48,43 +50,61 @@ const fetchData = async () => {
     loading.value = true;
     error.value = null;
     noData.value = false;
-    const response = await RatedRankService.fetchOverallRated(route.params.userId);
+
+    const response = await RatedRankService.fetchOverallRated(
+      route.params.userId
+    );
     if (response.code === 1010 && response.data) {
       const { overallOfCriteria } = response.data;
+
       if (overallOfCriteria && overallOfCriteria.length > 0) {
-        chartData.labels = overallOfCriteria.map(criteria => criteria.criteriaTitle);
-        chartData.datasets = [
-          {
-            label: "Tự đánh giá",
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
-            borderColor: "rgb(54, 162, 235)",
-            pointBackgroundColor: "rgb(54, 162, 235)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgb(54, 162, 235)",
-            data: overallOfCriteria.map(criteria => criteria.selfPoint),
-          },
-          {
-            label: "Đánh giá của Team",
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
-            borderColor: "rgb(255, 99, 132)",
-            pointBackgroundColor: "rgb(255, 99, 132)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgb(255, 99, 132)",
-            data: overallOfCriteria.map(criteria => criteria.teamPoint),
-          },
-          {
-            label: "Đánh giá của Quản lý",
-            backgroundColor: "rgba(255, 165, 0, 0.2)",
-            borderColor: "rgb(255, 165, 0)",
-            pointBackgroundColor: "rgb(255, 165, 0)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgb(255, 165, 0)",
-            data: overallOfCriteria.map(criteria => criteria.managerPoint),
-          },
-        ];
+        // Lọc các tiêu chí có giá trị tất cả bằng 0
+        const filteredCriteria = overallOfCriteria.filter(
+          (criteria) =>
+            criteria.selfPoint !== 0 ||
+            criteria.teamPoint !== 0 ||
+            criteria.managerPoint !== 0
+        );
+
+        if (filteredCriteria.length > 0) {
+          chartData.labels = filteredCriteria.map(
+            (criteria) => criteria.criteriaTitle
+          );
+          chartData.datasets = [
+            {
+              label: "Tự đánh giá",
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              borderColor: "rgb(54, 162, 235)",
+              pointBackgroundColor: "rgb(54, 162, 235)",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "rgb(54, 162, 235)",
+              data: filteredCriteria.map((criteria) => criteria.selfPoint),
+            },
+            {
+              label: "Đánh giá của Team",
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              borderColor: "rgb(255, 99, 132)",
+              pointBackgroundColor: "rgb(255, 99, 132)",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "rgb(255, 99, 132)",
+              data: filteredCriteria.map((criteria) => criteria.teamPoint),
+            },
+            {
+              label: "Đánh giá của Quản lý",
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              borderColor: "rgb(255, 165, 0)",
+              pointBackgroundColor: "rgb(255, 165, 0)",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "rgb(255, 165, 0)",
+              data: filteredCriteria.map((criteria) => criteria.managerPoint),
+            },
+          ];
+        } else {
+          noData.value = true; // Không có dữ liệu sau khi lọc
+        }
       } else {
         noData.value = true;
       }
@@ -102,6 +122,7 @@ const fetchData = async () => {
     loading.value = false;
   }
 };
+
 
 const createChart = () => {
   if (chartCanvas.value) {
@@ -123,7 +144,7 @@ const createChart = () => {
         plugins: {
           legend: {
             position: "bottom",
-            align: 'center',
+            align: "center",
             padding: 10,
             labels: {
               font: {
@@ -158,7 +179,7 @@ const createChart = () => {
         },
         scales: {
           r: {
-            angleLines: { 
+            angleLines: {
               display: true,
               color: "rgba(0, 0, 0, 0.1)",
             },
@@ -197,18 +218,21 @@ onMounted(async () => {
   }
 });
 
-watch(() => route.params.userId, async (newUserId) => {
-  if (newUserId) {
-    await fetchData();
-    if (!error.value && !noData.value && chart.value) {
-      chart.value.data = chartData;
-      chart.value.update();
-    } else if (chart.value) {
-      chart.value.destroy();
-      chart.value = null;
+watch(
+  () => route.params.userId,
+  async (newUserId) => {
+    if (newUserId) {
+      await fetchData();
+      if (!error.value && !noData.value && chart.value) {
+        chart.value.data = chartData;
+        chart.value.update();
+      } else if (chart.value) {
+        chart.value.destroy();
+        chart.value = null;
+      }
     }
   }
-});
+);
 </script>
 
 <style scoped>
@@ -251,5 +275,4 @@ canvas {
   width: 100%;
   height: 100%;
 }
-
 </style>
