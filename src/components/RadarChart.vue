@@ -40,7 +40,6 @@ const chart = ref(null);
 const loading = ref(true);
 const error = ref(null);
 const noData = ref(false);
-const noData = ref(false);
 const chartData = reactive({
   labels: [],
   datasets: [],
@@ -119,11 +118,6 @@ const fetchData = async () => {
     } else {
       error.value = "Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.";
     }
-    if (err.response && err.response.status === 400) {
-      noData.value = true;
-    } else {
-      error.value = "Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.";
-    }
   } finally {
     loading.value = false;
   }
@@ -145,10 +139,6 @@ const createChart = () => {
             right: 20,
             bottom: 20,
             left: 20,
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 20,
           },
         },
         plugins: {
@@ -159,11 +149,9 @@ const createChart = () => {
             labels: {
               font: {
                 size: 16,
-                size: 16,
                 weight: "bold",
               },
               color: "#333",
-              padding: 25,
               padding: 25,
             },
           },
@@ -172,21 +160,9 @@ const createChart = () => {
             text: "Đánh Giá 360°",
             font: {
               size: 24,
-              size: 24,
               weight: "bold",
             },
             padding: {
-              top: 20,
-              bottom: 40,
-            },
-          },
-          tooltip: {
-            bodyFont: {
-              size: 14,
-            },
-            titleFont: {
-              size: 16,
-              weight: "bold",
               top: 20,
               bottom: 40,
             },
@@ -214,7 +190,6 @@ const createChart = () => {
               beginAtZero: true,
               font: {
                 size: 14,
-                size: 14,
                 weight: "bold",
               },
               z: 2,
@@ -222,13 +197,8 @@ const createChart = () => {
             pointLabels: {
               font: {
                 size: 16,
-                size: 16,
                 weight: "bold",
               },
-              color: "#333",
-            },
-            grid: {
-              color: "rgba(0, 0, 0, 0.1)",
               color: "#333",
             },
             grid: {
@@ -243,7 +213,6 @@ const createChart = () => {
 
 onMounted(async () => {
   await fetchData();
-  if (!error.value && !noData.value) {
   if (!error.value && !noData.value) {
     createChart();
   }
@@ -271,26 +240,13 @@ watch(
   width: 100%;
   max-width: 1200px;
   height: 800px;
-  max-width: 1200px;
-  height: 800px;
   margin: 0 auto;
   position: relative;
 }
 
 .message {
-.message {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  width: 100%;
-  padding: 20px;
-}
-
-.loading {
-  top: 50%;
   transform: translateX(-50%);
   font-size: 20px;
   font-weight: bold;
@@ -313,19 +269,10 @@ watch(
 .no-data {
   top: 40px;
   color: #666;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  color: #ff4d4d;
-}
-
-.no-data {
-  top: 40px;
-  color: #666;
 }
 
 canvas {
   width: 100%;
   height: 100%;
 }
-
 </style>
