@@ -8,17 +8,28 @@
             <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
           </div>
           <div class="modal-body " style=" border-bottom: solid 0.05em gray;">
-            <form ref="employeeForm" class="form" @submit.prevent="submitForm">
-              <div class="mb-3">
+            <form ref="employeeForm" class="form" @submit.prevent="updateUser">
+              <!-- <div class="mb-3">
                 <label for="avatar" class="form-label">Ảnh đại diện</label>
                 <input type="file" class="form-control" id="avatar" @change="previewImage" accept="image/*" />
               </div>
               <div class="mb-3">
                 <img :src="employee.avatar" alt="Profile Picture" class="img-thumbnail" v-if="employee.avatar" />
-              </div>
-              <div class="mb-3">
-                <label for="employeeName" class="form-label">Họ tên</label>
-                <input type="text" class="form-control" id="employeeName" v-model="employee.name" required>
+              </div> -->
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="employeeName" class="form-label">Họ tên</label>
+                  <input type="text" class="form-control" id="employeeName" v-model="employee.name" required
+                    placeholder="Ví dụ: Hồ Xuân Đại" />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="employeeDepartment" class="form-label">Phòng ban</label>
+                  <select class="form-select" v-model="employee.departmentId" id="employeeDepartment" required>
+                    <option v-for="(value, key) in departments" :key="key" :value="value.id">
+                      {{ value.name }}
+                    </option>
+                  </select>
+                </div>
               </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
@@ -33,24 +44,22 @@
                     autocomplete="current-password" required minlength="6">
                 </div>
               </div>
-               <div class="row">
+              <div class="row">
                 <div class="col-md-6 mb-3">
                   <label for="employeePosition" class="form-label">Chức vụ</label>
-                  <select class="form-select" v-model="employee.rank.position.name" >
-                  <option value="INTERN">Intern</option>
-                  <option value="FRESHER">Fresher</option>
-                  <option value="MIDDLE">Midle</option>
-                </select>
+                  <select class="form-select" v-model="employee.rank.position.name">
+                    <option v-for="(value, key) in positions" :key="key" :value="key">
+                      {{ value }}
+                    </option>
+                  </select>
 
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="level" class="form-label">Cấp bậc</label>
                   <select class="form-select" v-model="employee.rank.level" required>
-                    <option value="1" selected>1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                    <option v-for="level in [1, 2, 3, 4, 5]" :key="level" :value="level">
+                      {{ level }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -65,11 +74,11 @@
                 </div> -->
                 <div class="col-md-6 mb-3">
                   <label for="employeeGender" class="form-label">Gender</label>
-                  <select class="form-select" v-model="employee.gender" >
-                  <option value="MALE">Male</option>
-                  <option value="FEMALE">Female</option>
-                  <option value="ORTHER">Orther</option>
-                </select>
+                  <select class="form-select" v-model="employee.gender">
+                    <option v-for="(value, key) in genders" :key="key" :value="key">
+                      {{ value }}
+                    </option>
+                  </select>
 
                 </div>
                 <div class="col-md-6 mb-3">
@@ -80,7 +89,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" @click="submitForm()">Xác nhận
+            <button type="submit" class="btn btn-primary" @click="updateUser()">Xác nhận
             </button>
           </div>
         </div>
@@ -90,6 +99,10 @@
 </template>
 
 <script>
+import EDepartment from '@/model/enum/EDepartment';
+import EGender from '@/model/enum/EGender';
+import EPosition from '@/model/enum/EPosition';
+import UserService from '@/services/UserService';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -109,43 +122,91 @@ export default {
     return {
       employee: { ...this.employeeData },
       apiUrl: process.env.VUE_APP_DB_URL,
+      positions: EPosition,
+      genders: EGender,
+      departments: EDepartment,
     };
   },
+
   watch: {
     employeeData: {
-    immediate: true, // Đồng bộ dữ liệu ngay khi component được mount
-    handler(newValue) {
-      if (newValue) {
-        this.employee = { ...newValue };
+      immediate: true, // Đồng bộ dữ liệu ngay khi component được mount
+      handler(newValue) {
+        if (newValue) {
+          this.employee = { ...newValue };
+        }
       }
     }
-  }
   },
 
   methods: {
     closeModal() {
       this.$emit('close');
     },
-       async submitForm() {
+
+    async updateUser() {
+      this.isLoading = true;
+
+      const employee = {
+        name: this.employee.name,
+        username: this.employee.username,
+        password: this.employee.password,
+        email: this.employee.email,
+        position: this.employee.rank.position.name,
+        level: this.employee.rank.level,
+        phoneNumber: this.employee.phoneNumber,
+        dob: this.employee.dob,
+        gender: this.employee.gender,
+        departmentId: this.employee.departmentId,
+      };
+      
+
+      try {
+        const response = await UserService.updateUser(employee, this.employee.id);
+        response.data;
+        this.$emit('employee-edited');
+        Swal.fire({
+          title: 'Sửa nhân viên thành công!',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+
+        setTimeout(() => {
+          this.closeModal();
+        }, 1500);
+
+      } catch (error) {
+        console.log(error);
+        Swal.fire({
+          title: 'Lỗi!',
+          text: 'Có lỗi xảy ra khi sửa thông tin nhân viên.',
+          icon: 'error',
+          confirmButtonText: 'Đóng'
+        });
+      }
+    },
+
+    async submitForm() {
       const form = this.$refs.employeeForm;
       if (form.reportValidity()) {
         const updatedEmployee = JSON.parse(JSON.stringify(this.employee));
         try {
           const response = await axios.put(this.apiUrl + `/api/users/${this.employee.id}`, updatedEmployee);
           response.data;
-            this.$emit('employee-added');
-            Swal.fire({
-              title: 'Thêm nhân viên thành công!',
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: false
-            });
+          this.$emit('employee-added');
+          Swal.fire({
+            title: 'Thêm nhân viên thành công!',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          });
 
-            this.resetForm();
-            setTimeout(() => {
-              this.closeModal();
-            }, 1500);
-          
+          this.resetForm();
+          setTimeout(() => {
+            this.closeModal();
+          }, 1500);
+
         } catch (error) {
           console.log(error);
           Swal.fire({
