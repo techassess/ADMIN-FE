@@ -1,6 +1,11 @@
 <template>
   <div style="border-bottom: solid gray">
-    <h2 class="mt-2 text-center">Chi tiết tiêu chí đánh giá</h2>
+    <div class="d-flex align-items-center justify-content-between">
+      <button class="btn btn-success me-3" type="button" @click="goBack">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="mt-2 text-center flex-grow-1">Chi tiết tiêu chí đánh giá</h2>
+    </div>
   </div>
   <!-- Chi tiết nhân viên -->
   <br />
@@ -9,9 +14,9 @@
     <div class="col-4 d-flex justify-content-center align-items-center">
       <div class="avatar">
         <img
-          :src="userInfo.fileInfo?.fileUrl || 'default-avatar.png'"
-          alt="avatar"
-          class="img-fluid"
+          :src="userInfo.fileInfo?.fileUrl || defaultUserImage"
+          alt="Avatar"
+          class="avatar"
         />
       </div>
     </div>
@@ -21,16 +26,9 @@
       <h4>
         Level: {{ userInfo.rank ? userInfo.rank.level : "Not available" }}
       </h4>
-      <h4>Dự án đang tham gia: {{ projectInfo.name ? projectInfo.name : "" }}</h4>
-    </div>
-    <div class="col-3">
-      <button
-        class="btn btn-success me-3"
-        type="button"
-        @click="goBack"
-      >
-        Quay lại
-      </button>
+      <h4>
+        Dự án đang tham gia: {{ projectInfo.name ? projectInfo.name : "" }}
+      </h4>
     </div>
   </div>
   <br />
@@ -40,29 +38,45 @@
       <table class="table table-hover table-bordered my-table">
         <thead>
           <tr>
-
             <th>Tiêu Chí</th>
-            <th>Tự đánh giá
-              <MyTooltips description="Số điểm trung bình mà bạn tự đánh giá được cho 1 tiêu chí trên thang 5" />
+            <th>
+              Tự đánh giá
+              <MyTooltips
+                description="Số điểm trung bình mà bạn tự đánh giá được cho 1 tiêu chí trên thang 5"
+              />
             </th>
-            <th>Quản Lý
-              <MyTooltips description="Số điểm trung bình mà quản lý đánh giá được cho 1 tiêu chí trên thang 5" />
+            <th>
+              Quản Lý
+              <MyTooltips
+                description="Số điểm trung bình mà quản lý đánh giá được cho 1 tiêu chí trên thang 5"
+              />
             </th>
-            <th>Team
-              <MyTooltips description="Số điểm trung bình mà team đánh giá được cho 1 tiêu chí trên thang 5" />
+            <th>
+              Team
+              <MyTooltips
+                description="Số điểm trung bình mà team đánh giá được cho 1 tiêu chí trên thang 5"
+              />
             </th>
-            <th>Điểm đạt được
-              <MyTooltips description="Tổng số điểm mà 1 tiêu chí đạt được (dựa trên thang điểm của tiêu chí)" />
+            <th>
+              Điểm đạt được
+              <MyTooltips
+                description="Tổng số điểm mà 1 tiêu chí đạt được (dựa trên thang điểm của tiêu chí)"
+              />
             </th>
-            <th>Hệ số
-              <MyTooltips description="Số điểm mà 1 tiêu chí chiếm trong tổng số điểm đánh giá" />
+            <th>
+              Hệ số
+              <MyTooltips
+                description="Số điểm mà 1 tiêu chí chiếm trong tổng số điểm đánh giá"
+              />
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, index) in overallRatedResDto.overallOfCriteria"
-            :key="overallRatedResDto.overallOfCriteria[index].criteriaId">
-            <td style="font-weight: 600;">{{ row.criteriaTitle }}</td>
+          <tr
+            v-for="(row, index) in overallRatedResDto.overallOfCriteria"
+            :key="overallRatedResDto.overallOfCriteria[index].criteriaId"
+          >
+            <td style="font-weight: 600">{{ row.criteriaTitle }}</td>
             <td>{{ row.selfPoint }}</td>
             <td>{{ row.managerPoint }}</td>
             <td>{{ row.teamPoint }}</td>
@@ -70,26 +84,41 @@
             <td>{{ row.criteriaPoint }}</td>
           </tr>
           <tr>
-            <td colspan="6" class="bg-warning" style="font-weight: 600; color: black;">Tổng hợp</td>
+            <td
+              colspan="6"
+              class="bg-warning"
+              style="font-weight: 600; color: black"
+            >
+              Tổng hợp
+            </td>
           </tr>
           <tr>
             <td colspan="4"></td>
-            <td>Điểm đánh giá (thang điểm 100)
-              <MyTooltips description="Tổng số điểm mà bạn đạt được (trên thang điểm 100)" />
+            <td>
+              Điểm đánh giá (thang điểm 100)
+              <MyTooltips
+                description="Tổng số điểm mà bạn đạt được (trên thang điểm 100)"
+              />
             </td>
             <td>{{ overallRatedResDto.overallPoint }}</td>
           </tr>
           <tr>
             <td colspan="4"></td>
-            <td>Xếp loại
-              <MyTooltips description="Xếp loại của bạn dựa trên tổng số điểm đánh giá" />
+            <td>
+              Xếp loại
+              <MyTooltips
+                description="Xếp loại của bạn dựa trên tổng số điểm đánh giá"
+              />
             </td>
             <td>{{ overallRatedResDto.rank }}</td>
           </tr>
           <tr>
             <td colspan="4"></td>
-            <td>Đề xuất tăng bậc
-              <MyTooltips description="Đề xuất tăng bậc của bạn dựa trên xếp loại" />
+            <td>
+              Đề xuất tăng bậc
+              <MyTooltips
+                description="Đề xuất tăng bậc của bạn dựa trên xếp loại"
+              />
             </td>
             <td>{{ overallRatedResDto.levelUpRecommend }}</td>
           </tr>
@@ -98,7 +127,6 @@
     </div>
   </div>
   <RadarChart />
-
 </template>
 
 <script>
@@ -108,7 +136,7 @@ import UserService from "@/services/UserService";
 import ProjectService from "@/services/ProjectService";
 import MyTooltips from "@/components/common/MyTooltips.vue";
 import RadarChart from "./RadarChart.vue";
-
+import defaultImage from "@/assets/avata.png";
 export default {
   name: "DetailUserRating",
   components: { MyTooltips, RadarChart },
@@ -122,6 +150,7 @@ export default {
       projectInfo: {},
       projectId: null,
       departmentId: null,
+      defaultUserImage: defaultImage,
     };
   },
   mounted() {
@@ -130,8 +159,8 @@ export default {
   },
   methods: {
     goBack() {
-    this.$router.push('/projects-manage');
-  },
+      this.$router.push("/projects-manage");
+    },
     async fetchData() {
       try {
         const resp = await RatedRankService.fetchOverallRated(
@@ -221,8 +250,6 @@ export default {
   background-color: #f2f2f2;
 }
 
-
-
 .my-tooltip {
   position: relative;
   display: inline-block;
@@ -236,13 +263,16 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #007bff;
-  /* Add a border around the avatar */
+  border: 2px solid #007bff;
 }
 
 .avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.fas {
+  font-size: 1.7rem;
 }
 </style>

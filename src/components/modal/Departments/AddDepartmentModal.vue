@@ -59,7 +59,6 @@
 </template>
 
 <script>
-//import Swal from "sweetalert2";
 import DepartmentsService from "@/services/DepartmentsService";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";

@@ -1,59 +1,81 @@
 <template>
   <div v-if="isVisible1" class="modal-backdrop">
-  <div class="criteria-edit container mt-4 overlay">
-    <h2 class="mb-4 bg-primary">Cập nhật tiêu chí</h2>
-    <form @submit.prevent="updateCriteria">
-      <div class="mb-3">
-        <label for="title" class="form-label d-flex text-start"
-          >Tên tiêu chí:</label
-        >
-        <input
-          type="text"
-          id="title"
-          v-model="criteria.title"
-          class="form-control"
-          @blur="validateTitle"
-          @input="clearServerError"
-          :class="{ 'is-invalid': errors.title || serverErrors.title }"
-        />
-        <div class="invalid-feedback" v-if="errors.title || serverErrors.title">
-          {{ errors.title || serverErrors.title }}
+    <div
+      class="modal fade show"
+      tabindex="-1"
+      aria-hidden="false"
+      style="display: block"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="border-bottom: solid 0.05em gray">
+            <h5 class="modal-title">Cập nhật tiêu chí</h5>
+            <button
+              class="btn-close"
+              type="button"
+              @click="closeForm"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="title" class="form-label d-flex text-start"
+                  >Tên tiêu chí:</label
+                >
+                <input
+                  type="text"
+                  id="title"
+                  v-model="criteria.title"
+                  class="form-control"
+                  @blur="validateTitle"
+                  @input="clearServerError"
+                  :class="{ 'is-invalid': errors.title || serverErrors.title }"
+                />
+                <div
+                  class="invalid-feedback"
+                  v-if="errors.title || serverErrors.title"
+                >
+                  {{ errors.title || serverErrors.title }}
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="criteriaType" class="form-label d-flex text-start"
+                  >Hiển thị cho</label
+                >
+                <select
+                  class="form-control"
+                  id="criteriaType"
+                  v-model="criteria.visibleFor"
+                  :class="{ 'is-invalid': errors.type }"
+                >
+                  <option value="">Vui lòng chọn</option>
+                  <option value="ALL_MEMBER">Tất cả nhân viên</option>
+                  <option value="SELF">Tự đánh giá</option>
+                  <option value="CROSS">Đánh giá chéo</option>
+                  <option value="MANAGER">Quản lý trực tiếp</option>
+                </select>
+                <div class="invalid-feedback" v-if="errors.type">
+                  {{ errors.type }}
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="d-flex justify-content-end">
+              <button
+                type="submit"
+                class="btn btn-primary me-2"
+                :disabled="hasErrors"
+                @click="updateCriteria"
+              >
+                Cập nhật
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="mb-3">
-        <label for="criteriaType" class="form-label">Hiển thị cho</label>
-        <select
-          class="form-control"
-          id="criteriaType"
-          v-model="criteria.visibleFor"
-          :class="{ 'is-invalid': errors.type }"
-        >
-          <option value="">Vui lòng chọn</option>
-          <option value="ALL_MEMBER">Tất cả nhân viên</option>
-          <option value="SELF">Tự đánh giá</option>
-          <option value="CROSS">Đánh giá chéo</option>
-          <option value="MANAGER">Quản lý trực tiếp</option>
-        </select>
-        <div class="invalid-feedback" v-if="errors.type">
-          {{ errors.type }}
-        </div>
-      </div>
-
-      <div class="d-flex justify-content-end">
-        <button
-          type="submit"
-          class="btn btn-primary me-2"
-          :disabled="hasErrors"
-        >
-          Cập nhật
-        </button>
-        <button type="button" class="btn btn-secondary" @click="closeForm">
-          Đóng
-        </button>
-      </div>
-    </form>
-  </div>
+    </div>
   </div>
 </template>
 

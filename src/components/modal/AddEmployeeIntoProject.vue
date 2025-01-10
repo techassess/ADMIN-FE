@@ -149,22 +149,14 @@ export default {
       const employeeIds = this.selectedEmployees.map(
         (index) => this.employees[index].id
       );
-
-      console.log("Selected Employee IDs:", employeeIds);
-
       const requestData = {
         employeeIds: employeeIds,
       };
-
-      console.log("Request Data:", requestData);
-
       try {
         const response = await axios.post(
           `${this.apiUrl}/api/projects/${this.project.id}/employees`,
           requestData
         );
-
-        console.log("API Response:", response.data);
         if (response.data.code === 201) {
           const selectedEmployeeDetails = this.selectedEmployees.map(
             (index) => this.employees[index]

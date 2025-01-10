@@ -1,17 +1,19 @@
 <template>
   <div class="criteria-detail">
     <div style="border-bottom: solid gray">
-      <h2 style="text-align: center" class="mt-2">
-        Chi tiết tiêu chí đánh giá
-      </h2>
+      <div class="d-flex align-items-center justify-content-between">
+        <button class="btn btn-success me-3" type="button" @click="goBack">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2 class="mt-2 text-center flex-grow-1">Chi tiết tiêu chí đánh giá</h2>
+      </div>
     </div>
-
     <div class="content mt-4">
       <h4><strong>Tiêu đề:</strong> {{ criteriaDetail.title }}</h4>
       <h4 class="mb-3"><strong>Số điểm:</strong> {{ criteriaDetail.point }}</h4>
       <div class="d-flex justify-content-end mb-3">
         <button
-          class="btn btn-success me-3 "
+          class="btn btn-success me-3"
           type="button"
           @click="openAddQuestionModal"
         >
@@ -64,8 +66,6 @@
         </tbody>
       </table>
       <p v-else>Không có câu hỏi nào cho tiêu chí này.</p>
-
-      <button class="btn btn-primary mt-3" @click="goBack">Quay lại</button>
     </div>
 
     <div class="pagination-wrapper">
@@ -170,12 +170,15 @@ export default {
   methods: {
     async fetchCriteriaDetail() {
       const id = this.$route.params.id;
-      const department_id = localStorage.getItem("selectedDepartmentId");   
+      const department_id = localStorage.getItem("selectedDepartmentId");
 
       try {
-        const response = await CriteriasService.fetchCriteriasById(id, department_id);
+        const response = await CriteriasService.fetchCriteriasById(
+          id,
+          department_id
+        );
         console.log(response);
-        
+
         if (response.code == 1010) {
           this.criteriaDetail = response.data;
         } else {
@@ -309,5 +312,9 @@ export default {
 .pagination-btn:disabled {
   background-color: #aaa;
   cursor: not-allowed;
+}
+
+.fas {
+  font-size: 1.7rem;
 }
 </style>

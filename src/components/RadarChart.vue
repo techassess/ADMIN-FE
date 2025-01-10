@@ -1,7 +1,8 @@
 <template>
   <div class="chart-container">
     <div v-if="loading" class="loading">Đang tải...</div>
-    <div v-else-if="error" class="error">Lỗi: {{ error }}</div>
+    <div v-else-if="error" class="error">{{ error }}</div>
+    <div v-else-if="noData" class="message no-data">Chưa có đánh giá nào cho người dùng này.</div>
     <canvas v-else ref="chartCanvas"></canvas>
   </div>
 </template>
@@ -36,6 +37,7 @@ const chartCanvas = ref(null);
 const chart = ref(null);
 const loading = ref(true);
 const error = ref(null);
+const noData = ref(false);
 const chartData = reactive({
   labels: [],
   datasets: []
@@ -45,48 +47,57 @@ const fetchData = async () => {
   try {
     loading.value = true;
     error.value = null;
+    noData.value = false;
     const response = await RatedRankService.fetchOverallRated(route.params.userId);
     if (response.code === 1010 && response.data) {
       const { overallOfCriteria } = response.data;
-      chartData.labels = overallOfCriteria.map(criteria => criteria.criteriaTitle);
-      chartData.datasets = [
-        {
-          label: "Tự đánh giá",
-          backgroundColor: "rgba(255, 255, 255, 1)",
-          borderColor: "rgb(54, 162, 235)",
-          pointBackgroundColor: "rgb(54, 162, 235)",
-          pointBorderColor: "#fff",
-          pointHoverBackgroundColor: "#fff",
-          pointHoverBorderColor: "rgb(54, 162, 235)",
-          data: overallOfCriteria.map(criteria => criteria.selfPoint),
-        },
-        {
-          label: "Đánh giá của Team",
-          backgroundColor: "rgba(255, 255, 255, 1)",
-          borderColor: "rgb(255, 99, 132)",
-          pointBackgroundColor: "rgb(255, 99, 132)",
-          pointBorderColor: "#fff",
-          pointHoverBackgroundColor: "#fff",
-          pointHoverBorderColor: "rgb(255, 99, 132)",
-          data: overallOfCriteria.map(criteria => criteria.teamPoint),
-        },
-        {
-          label: "Đánh giá của Quản lý",
-          backgroundColor: "rgba(255, 255, 255, 1)",
-          borderColor: "rgb(255, 165, 0)",
-          pointBackgroundColor: "rgb(255, 165, 0)",
-          pointBorderColor: "#fff",
-          pointHoverBackgroundColor: "#fff",
-          pointHoverBorderColor: "rgb(255, 165, 0)",
-          data: overallOfCriteria.map(criteria => criteria.managerPoint),
-        },
-      ];
+      if (overallOfCriteria && overallOfCriteria.length > 0) {
+        chartData.labels = overallOfCriteria.map(criteria => criteria.criteriaTitle);
+        chartData.datasets = [
+          {
+            label: "Tự đánh giá",
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgb(54, 162, 235)",
+            pointBackgroundColor: "rgb(54, 162, 235)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgb(54, 162, 235)",
+            data: overallOfCriteria.map(criteria => criteria.selfPoint),
+          },
+          {
+            label: "Đánh giá của Team",
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgb(255, 99, 132)",
+            pointBackgroundColor: "rgb(255, 99, 132)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgb(255, 99, 132)",
+            data: overallOfCriteria.map(criteria => criteria.teamPoint),
+          },
+          {
+            label: "Đánh giá của Quản lý",
+            backgroundColor: "rgba(255, 165, 0, 0.2)",
+            borderColor: "rgb(255, 165, 0)",
+            pointBackgroundColor: "rgb(255, 165, 0)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgb(255, 165, 0)",
+            data: overallOfCriteria.map(criteria => criteria.managerPoint),
+          },
+        ];
+      } else {
+        noData.value = true;
+      }
     } else {
       throw new Error("Phản hồi API không hợp lệ");
     }
   } catch (err) {
     console.error("Lỗi khi lấy dữ liệu:", err);
-    error.value = err.message;
+    if (err.response && err.response.status === 400) {
+      noData.value = true;
+    } else {
+      error.value = "Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.";
+    }
   } finally {
     loading.value = false;
   }
@@ -103,53 +114,74 @@ const createChart = () => {
         maintainAspectRatio: false,
         layout: {
           padding: {
-            bottom: 10,
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 20,
           },
         },
         plugins: {
           legend: {
             position: "bottom",
+            align: 'center',
+            padding: 10,
             labels: {
               font: {
-                size: 14,
+                size: 16,
                 weight: "bold",
               },
               color: "#333",
-              padding: 20,
+              padding: 25,
             },
           },
           title: {
             display: true,
             text: "Đánh Giá 360°",
             font: {
-              size: 18,
+              size: 24,
               weight: "bold",
             },
             padding: {
-              top: 10,
-              bottom: 30,
+              top: 20,
+              bottom: 40,
+            },
+          },
+          tooltip: {
+            bodyFont: {
+              size: 14,
+            },
+            titleFont: {
+              size: 16,
+              weight: "bold",
             },
           },
         },
         scales: {
           r: {
-            angleLines: { display: true },
+            angleLines: { 
+              display: true,
+              color: "rgba(0, 0, 0, 0.1)",
+            },
             suggestedMin: 0,
             suggestedMax: 5,
             ticks: {
               stepSize: 1,
               beginAtZero: true,
               font: {
-                size: 12,
+                size: 14,
                 weight: "bold",
               },
               z: 2,
             },
             pointLabels: {
               font: {
-                size: 14,
+                size: 16,
                 weight: "bold",
               },
+              color: "#333",
+            },
+            grid: {
+              color: "rgba(0, 0, 0, 0.1)",
             },
           },
         },
@@ -160,7 +192,7 @@ const createChart = () => {
 
 onMounted(async () => {
   await fetchData();
-  if (!error.value) {
+  if (!error.value && !noData.value) {
     createChart();
   }
 });
@@ -168,9 +200,12 @@ onMounted(async () => {
 watch(() => route.params.userId, async (newUserId) => {
   if (newUserId) {
     await fetchData();
-    if (!error.value && chart.value) {
+    if (!error.value && !noData.value && chart.value) {
       chart.value.data = chartData;
       chart.value.update();
+    } else if (chart.value) {
+      chart.value.destroy();
+      chart.value = null;
     }
   }
 });
@@ -179,27 +214,42 @@ watch(() => route.params.userId, async (newUserId) => {
 <style scoped>
 .chart-container {
   width: 100%;
-  max-width: 800px;
-  height: 500px;
+  max-width: 1200px;
+  height: 800px;
   margin: 0 auto;
   position: relative;
 }
 
-.loading, .error {
+.message {
   position: absolute;
-  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 18px;
+  transform: translateX(-50%);
+  font-size: 20px;
   font-weight: bold;
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.loading {
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .error {
-  color: red;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff4d4d;
+}
+
+.no-data {
+  top: 40px;
+  color: #666;
 }
 
 canvas {
   width: 100%;
   height: 100%;
 }
+
 </style>
