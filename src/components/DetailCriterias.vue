@@ -318,4 +318,7 @@ export default {
   cursor: not-allowed;
 }
 
+.fas {
+  font-size: 1.7rem;
+}
 </style>

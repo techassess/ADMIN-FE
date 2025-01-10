@@ -76,7 +76,9 @@
             v-for="(row, index) in overallRatedResDto.overallOfCriteria"
             :key="overallRatedResDto.overallOfCriteria[index].criteriaId"
           >
-            <td style="font-weight: 600">{{ row.criteriaTitle }}</td>
+            <td style="font-weight: 600; text-align: left; padding-left: 1em">
+              {{ row.criteriaTitle }}
+            </td>
             <td>{{ row.selfPoint }}</td>
             <td>{{ row.managerPoint }}</td>
             <td>{{ row.teamPoint }}</td>
