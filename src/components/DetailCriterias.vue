@@ -8,7 +8,7 @@
         <h2 class="mt-2 text-center flex-grow-1">Chi tiết tiêu chí đánh giá</h2>
       </div>
     </div>
-    <div class="content mt-4">
+    <div class="content mt-4" style="height: 75vh; width: 100%">
       <h4><strong>Tiêu đề:</strong> {{ criteriaDetail.title }}</h4>
       <h4 class="mb-3"><strong>Số điểm:</strong> {{ criteriaDetail.point }}</h4>
       <div class="d-flex justify-content-end mb-3">
@@ -20,70 +20,71 @@
           Thêm câu hỏi
         </button>
       </div>
+      <div class="" style="height: 64vh; width: 100%;">
+        <table
+          v-if="criteriaDetail.questions && criteriaDetail.questions.length > 0"
+          class="table table-hover table-bordered criteria-table"
+        >
+          <thead>
+            <tr>
+              <th style="width: 30px">STT</th>
+              <th>Câu hỏi</th>
+              <th>Điểm</th>
+              <th style="width: 250px">Tác vụ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(question, index) in criteriaDetail.questions"
+              :key="index"
+            >
+              <td>{{ index + 1 }}</td>
+              <td class="text-start">{{ question.title }}</td>
+              <td>{{ question.point }}</td>
+              <td>
+                <button
+                  class="btn btn-primary me-2"
+                  @click="openDetailModal(question)"
+                >
+                  Chi tiết
+                </button>
+                <button
+                  class="btn btn-warning me-2"
+                  @click="openEditModal(question)"
+                >
+                  Sửa
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  @click="confirmDeleteQuestion(question.id)"
+                >
+                  Xoá
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p v-else>Không có câu hỏi nào cho tiêu chí này.</p>
+      </div>
 
-      <table
-        v-if="criteriaDetail.questions && criteriaDetail.questions.length > 0"
-        class="table table-hover table-bordered criteria-table"
-      >
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Câu hỏi</th>
-            <th>Điểm</th>
-            <th>Tác vụ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(question, index) in criteriaDetail.questions"
-            :key="index"
-          >
-            <td>{{ index + 1 }}</td>
-            <td>{{ question.title }}</td>
-            <td>{{ question.point }}</td>
-            <td>
-              <button
-                class="btn btn-primary me-2"
-                @click="openDetailModal(question)"
-              >
-                Chi tiết
-              </button>
-              <button
-                class="btn btn-warning me-2"
-                @click="openEditModal(question)"
-              >
-                Sửa
-              </button>
-              <button
-                type="button"
-                class="btn btn-danger"
-                @click="confirmDeleteQuestion(question.id)"
-              >
-                Xoá
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p v-else>Không có câu hỏi nào cho tiêu chí này.</p>
-    </div>
-
-    <div class="pagination-wrapper">
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="pagination-btn"
-      >
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="pagination-btn"
-      >
-        <i class="fas fa-arrow-right"></i>
-      </button>
+      <div class="pagination-wrapper">
+        <button
+          @click="prevPage"
+          :disabled="currentPage === 1"
+          class="pagination-btn"
+        >
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <span>Trang {{ currentPage }} / {{ totalPages }}</span>
+        <button
+          @click="nextPage"
+          :disabled="currentPage === totalPages"
+          class="pagination-btn"
+        >
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
     </div>
 
     <DetailQuestionModal
@@ -289,11 +290,12 @@ export default {
 .pagination-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
 }
+
 .pagination-wrapper span {
   margin-top: 28px;
 }
+
 .pagination-btn {
   margin: 10px 10px;
   padding: 8px 16px;
@@ -306,15 +308,14 @@ export default {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
 }
+
 .pagination-btn:hover {
   background-color: #0056b3;
 }
+
 .pagination-btn:disabled {
   background-color: #aaa;
   cursor: not-allowed;
 }
 
-.fas {
-  font-size: 1.7rem;
-}
 </style>
