@@ -3,7 +3,7 @@
     <h2 style="text-align: center">Quản lý phòng ban</h2>
   </div>
   <div class="content">
-    <nav class="navbar navbar-light mt-3">
+    <nav class="navbar navbar-light">
       <input
         type="text"
         v-model="searchQuery"
@@ -18,13 +18,13 @@
         Thêm phòng ban
       </button>
     </nav>
-    <div class="table-responsive-md mt-2">
+    <div class="table-responsive-md" style="height: 75vh; width: 100%;">
       <table class="table table-hover table-bordered department-table">
         <thead>
           <tr>
-            <th scope="col">STT</th>
+            <th style="width: 30px;" scope="col">STT</th>
             <th scope="col">Tên phòng ban</th>
-            <th scope="col">Tác vụ</th>
+            <th style="width: 200px;" scope="col">Tác vụ</th>
           </tr>
         </thead>
         <tbody>
@@ -222,7 +222,7 @@ export default {
 }
 
 .search-bar {
-  padding: 10px;
+  padding: 10px !important;
   width: 350px;
   border-radius: 25px;
   border: 1px solid #ddd;
@@ -250,7 +250,7 @@ export default {
 
 .department-table th,
 .department-table td {
-  padding: 7px;
+  /* padding: 7px; */
   vertical-align: middle;
   border-bottom: 1px solid #f0f0f0;
   text-align: center;
@@ -260,7 +260,7 @@ export default {
   background-color: #000066;
   color: white;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
 }
 
@@ -275,7 +275,6 @@ export default {
 .pagination-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
 }
 
 .pagination-wrapper span {

@@ -9,13 +9,6 @@
           </div>
           <div class="modal-body " style=" border-bottom: solid 0.05em gray;">
             <form ref="employeeForm" class="form" @submit.prevent="updateUser">
-              <!-- <div class="mb-3">
-                <label for="avatar" class="form-label">Ảnh đại diện</label>
-                <input type="file" class="form-control" id="avatar" @change="previewImage" accept="image/*" />
-              </div>
-              <div class="mb-3">
-                <img :src="employee.avatar" alt="Profile Picture" class="img-thumbnail" v-if="employee.avatar" />
-              </div> -->
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label for="employeeName" class="form-label">Họ tên</label>
@@ -64,14 +57,6 @@
                 </div>
               </div>
               <div class="row">
-                <!-- <div class="col-md-6 mb-3">
-                  <label for="date" class="form-label">Thuộc dự án</label>
-                  <select class="form-select" v-model="employee.project" required>
-                    <option v-for="project in projects" :key="project.id" :value="project.name">
-                      {{ project.name }}
-                    </option>
-                  </select>
-                </div> -->
                 <div class="col-md-6 mb-3">
                   <label for="employeeGender" class="form-label">Gender</label>
                   <select class="form-select" v-model="employee.gender">
@@ -89,7 +74,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" @click="updateUser()">Xác nhận
+            <button type="submit" class="btn btn-primary" @click="updateUser()">Cập nhật
             </button>
           </div>
         </div>

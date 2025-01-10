@@ -1,269 +1,312 @@
-  <template>
-    <div style="border-bottom: solid gray;">
-      <h2 style="text-align: center">Quản lý danh sách dự án</h2>
+<template>
+  <div style="border-bottom: solid gray">
+    <h2 style="text-align: center">Quản lý danh sách dự án</h2>
+  </div>
+  <div class="container">
+    <div
+      class="navbar navbar-light d-flex flex-row justify-content-between"
+      style="width: 100%"
+    >
+      <!-- Search Bar -->
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="Tìm kiếm tên dự án hoặc bộ phận..."
+        class="search-bar"
+      />
+      <button class="btn btn-success me-3" @click="showModalAddProject">
+        Thêm dự án
+      </button>
     </div>
-    <div class="container">
-      <div class="top-bar d-flex flex-row justify-content-between " style="width: 100%;">
-        <!-- Search Bar -->
-        <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tên dự án hoặc bộ phận..." class="search-bar" />
-        <button class="btn btn-success me-3" @click="showModalAddProject">
-          Thêm dự án
-        </button>
-      </div>
-
+    <div class="table-responsive-md" style="height:75vh; width: 100%;">
       <!-- Table -->
       <table class="table project-table table-hover table-bordered">
         <thead>
           <tr>
-            <th>STT</th>
-            <th @click="sort('name')">Dự án</th>
-            <th>Số lượng thành viên</th>
-            <th>Ngày bắt đầu</th>
-            <th>Ngày kết thúc</th>
-            <th>Tác vụ</th>
+            <th style="width: 30px;" scope="col">STT</th>
+            <th @click="sort('name')" scope="col">Dự án</th>
+            <th scope="col">Số lượng thành viên</th>
+            <th scope="col">Ngày bắt đầu</th>
+            <th scope="col">Ngày kết thúc</th>
+            <th style="width: 200px;" scope="col">Tác vụ</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(projects, index) in paginatedProjects" :key="projects.id">
-            <td>{{ (currentPageProjects - 1) * pageSizeProjects + index + 1 }}</td>
-            <td class="project-name" @click="showProjectDetailsModal(projects)">{{ projects.name }}</td>
+            <td>
+              {{ (currentPageProjects - 1) * pageSizeProjects + index + 1 }}
+            </td>
+            <td class="project-name text-start" @click="showProjectDetailsModal(projects)">
+              {{ projects.name }}
+            </td>
             <td>{{ projects.userProjects.length }}</td>
             <td>{{ projects.startDay }}</td>
             <td>{{ projects.endDay }}</td>
             <td>
-              <button type='button' class="btn btn-warning me-3" @click="showUpdateProjectModal(projects)">Cập nhật</button>
-              <button type="button" class="btn btn-danger" @click="deleteProject(projects.id)">Xoá</button>
+              <button
+                type="button"
+                class="btn btn-warning me-3"
+                @click="showUpdateProjectModal(projects)"
+              >
+                Cập nhật
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="deleteProject(projects.id)"
+              >
+                Xoá
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Pagination -->
-      <div class="pagination">
-        <button @click="prevPage" :disabled="currentPageProjects === 1" class="pagination-btn">
+
+    </div>
+          <!-- Pagination -->
+          <div class="pagination">
+        <button
+          @click="prevPage"
+          :disabled="currentPageProjects === 1"
+          class="pagination-btn"
+        >
           <i class="fas fa-arrow-left"></i>
         </button>
         <span>Trang {{ currentPageProjects }} / {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPageProjects === totalPages" class="pagination-btn">
+        <button
+          @click="nextPage"
+          :disabled="currentPageProjects === totalPages"
+          class="pagination-btn"
+        >
           <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
-      <!-- Add Project Modal -->
-      <AddProject v-if="isShowProjectAddModal" @close="closeModalAddproject" @project-fetch="fetchProjects" />
-      <!-- Project Detail Modal -->
-      <ProjectDetails v-if="isShowProjectDetailsModal" :project="selectedProject" @close="closeProjectDetailsModal" />
-      <UpdateProject v-if="isShowProjectUpdateModal" :project="selectedProject" @close="closeModalUpdateProject" @project-fetch="fetchProjects" />
-    </div>
-  </template>
+    <!-- Add Project Modal -->
+    <AddProject
+      v-if="isShowProjectAddModal"
+      @close="closeModalAddproject"
+      @project-fetch="fetchProjects"
+    />
+    <!-- Project Detail Modal -->
+    <ProjectDetails
+      v-if="isShowProjectDetailsModal"
+      :project="selectedProject"
+      @close="closeProjectDetailsModal"
+    />
+    <UpdateProject
+      v-if="isShowProjectUpdateModal"
+      :project="selectedProject"
+      @close="closeModalUpdateProject"
+      @project-fetch="fetchProjects"
+    />
+  </div>
+</template>
 
-  <script>
-  import AddProject from './modal/AddProject.vue';
-  import UpdateProject from './modal/UpdateProject.vue';
-  import ProjectDetails from './modal/ProjectDetails.vue';
-  import axios from 'axios';
-  import Swal from 'sweetalert2';
+<script>
+import AddProject from "./modal/AddProject.vue";
+import UpdateProject from "./modal/UpdateProject.vue";
+import ProjectDetails from "./modal/ProjectDetails.vue";
+import axios from "axios";
+import Swal from "sweetalert2";
 
-  export default {
+export default {
+  name: "ProjectsManage",
+  components: {
+    AddProject,
+    ProjectDetails,
+    UpdateProject,
+  },
+  data() {
+    return {
+      apiUrl: process.env.VUE_APP_DB_URL,
+      isShowProjectAddModal: false,
+      isShowProjectDetailsModal: false,
+      isShowProjectUpdateModal: false,
+      searchQuery: "",
+      tableSearchQuery: "",
+      currentPageProjects: 1,
+      currentPageEmployees: 1,
+      currentPageDetails: 1,
+      pageSizeProjects: 10,
+      pageSizeEmployees: 10,
+      pageSizeDetails: 5,
+      sortField: "name",
+      sortDirection: 1,
+      sortDetailField: "nameNV",
+      sortDetailDirection: 1,
+      activeMenu: null,
+      activeProject: null,
+      activeDetail: null,
+      isModalVisible: false,
+      projects: [],
+      selectedDepartment: "",
+      selectedEmployees: [],
+      selectedProject: null,
+      selectedProjectDetails: [],
+      showAddEmployee: false,
+      previousSelectedProject: null,
+    };
+  },
+  mounted() {
+    this.fetchProjects();
+  },
+  computed: {
+    filteredProjects() {
+      let filtered = this.projects.filter((project) => {
+        const lowerCaseQuery = this.searchQuery.toLowerCase();
+        return project.name.toLowerCase().includes(lowerCaseQuery);
+      });
 
-    name: 'ProjectsManage',
-    components: {
-      AddProject,
-      ProjectDetails,
-      UpdateProject,
+      filtered.sort((a, b) => {
+        return (
+          this.sortDirection *
+          a[this.sortField]
+            .toLowerCase()
+            .localeCompare(b[this.sortField].toLowerCase())
+        );
+      });
+
+      return filtered;
     },
-    data() {
-      return {
-        apiUrl: process.env.VUE_APP_DB_URL,
-        isShowProjectAddModal: false,
-        isShowProjectDetailsModal: false,
-        isShowProjectUpdateModal: false,
-        searchQuery: "",
-        tableSearchQuery: "",
-        currentPageProjects: 1,
-        currentPageEmployees: 1,
-        currentPageDetails: 1,
-        pageSizeProjects: 10,
-        pageSizeEmployees: 10,
-        pageSizeDetails: 5,
-        sortField: "name",
-        sortDirection: 1,
-        sortDetailField: "nameNV",
-        sortDetailDirection: 1,
-        activeMenu: null,
-        activeProject: null,
-        activeDetail: null,
-        isModalVisible: false,
-        projects: [],
-        selectedDepartment: "",
-        selectedEmployees: [],
-        selectedProject: null,
-        selectedProjectDetails: [],
-        showAddEmployee: false,
-        previousSelectedProject: null
-      };
+    paginatedProjects() {
+      const start = (this.currentPageProjects - 1) * this.pageSizeProjects;
+      return this.filteredProjects.slice(start, start + this.pageSizeProjects);
     },
-    mounted() {
-      this.fetchProjects();
+    totalPages() {
+      return Math.ceil(this.filteredProjects.length / this.pageSizeProjects);
     },
-    computed: {
-      filteredProjects() {
-        let filtered = this.projects.filter((project) => {
-          const lowerCaseQuery = this.searchQuery.toLowerCase();
-          return (
-            project.name.toLowerCase().includes(lowerCaseQuery)
-          );
-        });
-
-        filtered.sort((a, b) => {
-          return this.sortDirection * a[this.sortField].toLowerCase().localeCompare(b[this.sortField].toLowerCase());
-        });
-
-        return filtered;
-      },
-      paginatedProjects() {
-        const start = (this.currentPageProjects - 1) * this.pageSizeProjects;
-        return this.filteredProjects.slice(start, start + this.pageSizeProjects);
-      },
-      totalPages() {
-        return Math.ceil(this.filteredProjects.length / this.pageSizeProjects);
-      },
-
+  },
+  methods: {
+    async fetchProjects() {
+      try {
+        const response = await axios.get(this.apiUrl + "/api/projects");
+        this.projects = response.data.data;
+        console.log(this.projects);
+      } catch (error) {
+        console.error("Error fetching projetcs:", error);
+      }
     },
-    methods: {
-      async fetchProjects() {
+    async deleteProject(projectId) {
+      const result = await Swal.fire({
+        title: "Bạn có chắc chắn muốn xóa dự án này?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Xóa",
+        cancelButtonText: "Hủy",
+        reverseButtons: true,
+      });
+      if (result.isConfirmed) {
         try {
-          const response = await axios.get(this.apiUrl + '/api/projects');
-          this.projects = response.data.data;
-          console.log(this.projects);
+          await axios.delete(`${this.apiUrl}/api/projects/${projectId}`);
+          this.fetchProjects();
+          Swal.fire({
+            title: "Đã xóa dự án!",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+          });
         } catch (error) {
-          console.error('Error fetching projetcs:', error);
+          Swal.fire({
+            title: "Lỗi!",
+            text: "Đã xảy ra lỗi khi xóa dự án.",
+            icon: "error",
+            confirmButtonText: "Đóng",
+          });
         }
-      },
-      async deleteProject(projectId) {
-        const result = await Swal.fire({
-          title: 'Bạn có chắc chắn muốn xóa dự án này?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Xóa',
-          cancelButtonText: 'Hủy',
-          reverseButtons: true,
-        });
-        if (result.isConfirmed) {
-          try {
-            await axios.delete(`${this.apiUrl}/api/projects/${projectId}`);
-            this.fetchProjects()
-            Swal.fire({
-              title: 'Đã xóa dự án!',
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: false,
-            });
+      }
+    },
 
-          } catch (error) {
-            Swal.fire({
-              title: 'Lỗi!',
-              text: 'Đã xảy ra lỗi khi xóa dự án.',
-              icon: 'error',
-              confirmButtonText: 'Đóng',
-            });
-          }
-        }
-      },
-
-
-    
-  showUpdateProjectModal(project) {
+    showUpdateProjectModal(project) {
       this.selectedProject = project;
-      console.log('Selected project ID:', project.id);
+      console.log("Selected project ID:", project.id);
       this.isShowProjectUpdateModal = true;
     },
     closeModalUpdateProject() {
       this.isShowProjectUpdateModal = false;
       this.selectedProject = null;
     },
-  
-      showModalAddProject() {
-        this.isShowProjectAddModal = true;
-      },
-      closeModalAddproject() {
-        this.isShowProjectAddModal = false;
-      },
-      showProjectDetailsModal(project) {
-        this.selectedProject = project
-        this.isShowProjectDetailsModal = true;
-      },
-      closeProjectDetailsModal() {
-        this.isShowProjectDetailsModal = false;
-        this.selectedProject = null
-      },
-      
-      addEmployeeToProject(employeeDetails) {
-        if (this.selectedProject) {
-          this.selectedProject.details.push(...employeeDetails);
-        }
-        this.closeAddEmployeeIntoProjectModal();
-      },
-      // Hàm lọc dự án theo department và thêm details vào project mới
-      addDetailsToNewProject(department) {
-        const filteredProjects = this.projects.filter(
-          (project) => project.department === department
-        );
-        const mergedDetails = filteredProjects.flatMap(
-          (project) => project.details
-        );
-        this.newProject.details = mergedDetails;
-      },
 
+    showModalAddProject() {
+      this.isShowProjectAddModal = true;
+    },
+    closeModalAddproject() {
+      this.isShowProjectAddModal = false;
+    },
+    showProjectDetailsModal(project) {
+      this.selectedProject = project;
+      this.isShowProjectDetailsModal = true;
+    },
+    closeProjectDetailsModal() {
+      this.isShowProjectDetailsModal = false;
+      this.selectedProject = null;
+    },
 
-      sort(field) {
-        if (this.sortField === field) {
-          this.sortDirection *= -1;
+    addEmployeeToProject(employeeDetails) {
+      if (this.selectedProject) {
+        this.selectedProject.details.push(...employeeDetails);
+      }
+      this.closeAddEmployeeIntoProjectModal();
+    },
+    // Hàm lọc dự án theo department và thêm details vào project mới
+    addDetailsToNewProject(department) {
+      const filteredProjects = this.projects.filter(
+        (project) => project.department === department
+      );
+      const mergedDetails = filteredProjects.flatMap(
+        (project) => project.details
+      );
+      this.newProject.details = mergedDetails;
+    },
+
+    sort(field) {
+      if (this.sortField === field) {
+        this.sortDirection *= -1;
+      } else {
+        this.sortField = field;
+        this.sortDirection = 1;
+      }
+    },
+    closeAddEmployeeModal() {
+      this.showAddEmployee = false;
+      if (this.previousSelectedProject) {
+        this.selectedProject = this.previousSelectedProject;
+        this.previousSelectedProject = null; // Clear the stored project
+      }
+    },
+    toggleMenu(type, item) {
+      if (type === "project") {
+        if (this.activeProject === item) {
+          this.activeProject = null; // Close the menu if clicked again
         } else {
-          this.sortField = field;
-          this.sortDirection = 1;
+          this.activeProject = item;
+          this.activeMenu = "project";
+          this.activeDetail = null; // Close detail menu if open
         }
-      },
-      closeAddEmployeeModal() {
-        this.showAddEmployee = false;
-        if (this.previousSelectedProject) {
-          this.selectedProject = this.previousSelectedProject;
-          this.previousSelectedProject = null; // Clear the stored project
+      } else if (type === "detail") {
+        if (this.activeDetail === item) {
+          this.activeDetail = null; // Close the menu if clicked again
+        } else {
+          this.activeDetail = item;
+          this.activeMenu = "detail";
+          this.activeProject = null; // Close project menu if open
         }
-      },
-      toggleMenu(type, item) {
-        if (type === 'project') {
-          if (this.activeProject === item) {
-            this.activeProject = null; // Close the menu if clicked again
-          } else {
-            this.activeProject = item;
-            this.activeMenu = 'project';
-            this.activeDetail = null; // Close detail menu if open
-          }
-        } else if (type === 'detail') {
-          if (this.activeDetail === item) {
-            this.activeDetail = null; // Close the menu if clicked again
-          } else {
-            this.activeDetail = item;
-            this.activeMenu = 'detail';
-            this.activeProject = null; // Close project menu if open
-          }
-        }
-      },
-      prevPage() {
-        if (this.currentPageProjects > 1) {
-          this.currentPageProjects -= 1;
-        }
-      },
-      nextPage() {
-        if (this.currentPageProjects < this.totalPages) {
-          this.currentPageProjects += 1;
-        }
-      },
-    }
-  };
-  </script>
-
+      }
+    },
+    prevPage() {
+      if (this.currentPageProjects > 1) {
+        this.currentPageProjects -= 1;
+      }
+    },
+    nextPage() {
+      if (this.currentPageProjects < this.totalPages) {
+        this.currentPageProjects += 1;
+      }
+    },
+  },
+};
+</script>
 
 <style scoped>
 .container {
@@ -304,9 +347,7 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
   opacity: 0;
   transform: translateY(-10px);
-
 }
-
 
 .menu-dropdown.show {
   display: block;
@@ -326,7 +367,6 @@
   display: flex;
   align-items: center;
   transition: background-color 0.3s ease, color 0.3s ease;
-
 }
 
 .menu-item:hover {
@@ -340,8 +380,8 @@
 
 .project-table td {
   position: relative;
-  padding: 5px;
-  height: 40px;
+  /* padding: 5px; */
+  /* height: 40px; */
 }
 
 .project-table td .menu-container {
@@ -349,17 +389,15 @@
   /* Center align if necessary */
 }
 
-
 .top-bar {
   display: flex;
   justify-content: flex-start;
   width: 100%;
-  margin-bottom: 20px;
-  margin-top: 20px;
+
 }
 
 .search-bar {
-  padding: 10px;
+  padding: 10px !important; 
   width: 350px;
   border-radius: 25px;
   border: 1px solid #ddd;
@@ -371,7 +409,6 @@
 .search-bar:focus {
   border-color: #007bff;
 }
-
 
 .project-table {
   border-collapse: separate;

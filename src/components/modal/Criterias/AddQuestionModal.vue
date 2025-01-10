@@ -88,14 +88,7 @@
                 :disabled="hasErrors || isSubmitting"
                 @click="addQuestion"
               >
-                Lưu
-              </button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                @click="closeForm"
-              >
-                Đóng
+                Thêm
               </button>
             </div>
           </div>

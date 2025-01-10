@@ -68,17 +68,6 @@
               </div>
             </form>
           </div>
-          <div class="modal-footer">
-            <div class="d-flex justify-content-end mt-5">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                @click="closeForm"
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
