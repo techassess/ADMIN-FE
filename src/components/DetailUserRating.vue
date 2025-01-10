@@ -1,6 +1,11 @@
 <template>
   <div style="border-bottom: solid gray">
-    <h2 class="mt-2 text-center">Chi tiết tiêu chí đánh giá</h2>
+    <div class="d-flex align-items-center justify-content-between">
+      <button class="btn btn-success me-3" type="button" @click="goBack">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="mt-2 text-center flex-grow-1">Chi tiết tiêu chí đánh giá</h2>
+    </div>
   </div>
   <!-- Chi tiết nhân viên -->
   <br />
@@ -24,11 +29,6 @@
       <h4>
         Dự án đang tham gia: {{ projectInfo.name ? projectInfo.name : "" }}
       </h4>
-    </div>
-    <div class="col-3">
-      <button class="btn btn-success me-3" type="button" @click="goBack">
-        Quay lại
-      </button>
     </div>
   </div>
   <br />
@@ -150,7 +150,7 @@ export default {
       projectInfo: {},
       projectId: null,
       departmentId: null,
-      defaultUserImage: defaultImage
+      defaultUserImage: defaultImage,
     };
   },
   mounted() {
@@ -264,12 +264,15 @@ export default {
   align-items: center;
   justify-content: center;
   border: 2px solid #007bff;
-
 }
 
 .avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.fas {
+  font-size: 1.7rem;
 }
 </style>
