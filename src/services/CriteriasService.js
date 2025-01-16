@@ -2,7 +2,7 @@ import axios from "axios";
 const CriteriasService = {
   addCriteria: async (formData) => {
     const resp = await axios.post(
-      "http://localhost:8080/api/criterias",
+      process.env.VUE_APP_DB_URL + "/api/criterias",
       formData,
       {
         headers: { "Content-Type": "application/json" }
@@ -14,7 +14,7 @@ const CriteriasService = {
   deletedCriterias: async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/criterias/${id}`
+        process.env.VUE_APP_DB_URL + `/api/criterias/${id}`
       );
       return response;
     } catch (error) {
@@ -24,7 +24,7 @@ const CriteriasService = {
 
   fetchCriterias: async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/criterias");
+      const response = await axios.get(process.env.VUE_APP_DB_URL + "/api/criterias");
       return response.data;
     } catch (error) {
       console.error(error);
@@ -34,7 +34,7 @@ const CriteriasService = {
   fetchCriteriasById: async (id, department_id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/criterias/${id}/${department_id}`
+        process.env.VUE_APP_DB_URL + `/api/criterias/${id}/${department_id}`
       );
       return response.data;
     } catch (error) {
@@ -49,7 +49,7 @@ const CriteriasService = {
       };
 
       const response = await axios.put(
-        `http://localhost:8080/api/criterias/${id}`,
+        process.env.VUE_APP_DB_URL + `/api/criterias/${id}`,
         updatedCriteria
       );
       return response.data;
@@ -70,7 +70,7 @@ const CriteriasService = {
       };
 
       const response = await axios.put(
-        `http://localhost:8080/api/criterias/update-criterion-in-department`,
+        process.env.VUE_APP_DB_URL + `/api/criterias/update-criterion-in-department`,
         dto
       );
       return response.data;
@@ -83,7 +83,7 @@ const CriteriasService = {
   // department
   fetchDepartment: async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/departments");
+      const response = await axios.get(process.env.VUE_APP_DB_URL + "/api/departments");
       return response.data;
     } catch (error) {
       console.error(error);

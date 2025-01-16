@@ -2,7 +2,7 @@ import axios from 'axios';
 const UserService = {
     addUser: async (dto) => {
         try {
-            const response = await axios.post('http://localhost:8080/api/auths/register', dto);
+            const response = await axios.post(process.env.VUE_APP_DB_URL + '/api/auths/register', dto);
             return response.data;
         } catch (error) {
             console.error(error);
@@ -10,7 +10,7 @@ const UserService = {
     },
     deletedUser: async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/api/users/${id}`);
+            const response = await axios.delete(process.env.VUE_APP_DB_URL + `/api/users/${id}`);
             return response.data;
         } catch (error) {
             console.error(error);
@@ -18,7 +18,7 @@ const UserService = {
     },
     fetchUsers: async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/users');
+            const response = await axios.get(process.env.VUE_APP_DB_URL + '/api/users');
             return response.data;
         } catch (error) {
             console.error(error);
@@ -26,7 +26,7 @@ const UserService = {
     },
     fetchUserById: async (id) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/users/${id}`);
+            const response = await axios.get(process.env.VUE_APP_DB_URL + `/api/users/${id}`);
             return response.data;
         } catch (error) {
             console.error(error);
@@ -34,7 +34,7 @@ const UserService = {
     },
     updateUser: async (reqDto, id) => {
         try {
-            const response = await axios.put(`http://localhost:8080/api/users/${id}`, reqDto);
+            const response = await axios.put(process.env.VUE_APP_DB_URL + `/api/users/${id}`, reqDto);
             return response.data;
         } catch (error) {
             console.error(error);

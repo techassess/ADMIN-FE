@@ -2,7 +2,7 @@ import axios from 'axios';
 const ProjectService = {
     fetchProjects: async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/projects');
+            const response = await axios.get(process.env.VUE_APP_DB_URL + '/api/projects');
             return response.data;
         } catch (error) {
             console.error(error);
@@ -10,7 +10,7 @@ const ProjectService = {
     },
     fetchProjectById: async (id) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/projects/${id}`);
+            const response = await axios.get(process.env.VUE_APP_DB_URL + `/api/projects/${id}`);
             return response.data;
         } catch (error) {
             console.error(error);

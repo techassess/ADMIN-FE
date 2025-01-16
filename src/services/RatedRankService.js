@@ -5,7 +5,7 @@ const RatedRankService = {
 
     fetchOverallRated: async (userId) => {
         try {
-            const response = await axios.get("http://localhost:8080/api/rated-rank/overall-rated/" + userId);
+            const response = await axios.get(process.env.VUE_APP_DB_URL + "/api/rated-rank/overall-rated/" + userId);
             /**
              * @type {ApiResponse}
              */
