@@ -32,6 +32,7 @@
     </div>
   </div>
   <br />
+  <RadarChart />
   <br />
   <div class="content">
     <div class="mt-2">
@@ -128,7 +129,7 @@
       </table>
     </div>
   </div>
-  <RadarChart />
+
 </template>
 
 <script>
