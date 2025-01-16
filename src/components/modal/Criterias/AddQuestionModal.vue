@@ -1,52 +1,26 @@
 <template>
   <div v-if="isVisible" class="modal-backdrop">
-    <div
-      class="modal fade show"
-      tabindex="-1"
-      aria-hidden="false"
-      style="display: block"
-    >
+    <div class="modal fade show" tabindex="-1" aria-hidden="false" style="display: block">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Thêm mới câu hỏi</h5>
-            <button
-              class="btn-close"
-              type="button"
-              @click="closeForm"
-              aria-label="Close"
-            ></button>
+            <button class="btn-close" type="button" @click="closeForm" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form>
               <div class="mb-4">
-                <label for="question-title" class="form-label d-flex text-start"
-                  >Tên câu hỏi:</label
-                >
-                <input
-                  type="text"
-                  id="question-title"
-                  v-model="localQuestion.title"
-                  class="form-control"
-                  :class="{ 'is-invalid': errors.title }"
-                  @blur="validateQuestion"
-                />
+                <label for="question-title" class="form-label d-flex text-start">Tên câu hỏi:</label>
+                <input type="text" id="question-title" v-model="localQuestion.title" class="form-control"
+                  :class="{ 'is-invalid': errors.title }" @blur="validateQuestion" />
                 <div v-if="errors.title" class="invalid-feedback">
                   {{ errors.title }}
                 </div>
               </div>
               <div class="mb-4">
-                <label for="question-point" class="form-label d-flex text-start"
-                  >Điểm câu hỏi:</label
-                >
-                <input
-                  type="number"
-                  id="question-point"
-                  v-model="localQuestion.point"
-                  class="form-control"
-                  :class="{ 'is-invalid': errors.point }"
-                  @blur="validatePoint"
-                />
+                <label for="question-point" class="form-label d-flex text-start">Điểm câu hỏi:</label>
+                <input type="number" id="question-point" v-model="localQuestion.point" class="form-control"
+                  :class="{ 'is-invalid': errors.point }" @blur="validatePoint" />
                 <div v-if="errors.point" class="invalid-feedback">
                   {{ errors.point }}
                 </div>
@@ -55,26 +29,13 @@
               <lable class="p-2 d-flex text-start">
                 <h5>Mức độ câu trả lời</h5>
               </lable>
-              <div
-                v-for="(answer, answerIndex) in localQuestion.answers"
-                :key="answer.id"
-                class="form-group mb-3"
-              >
+              <div v-for="(answer, answerIndex) in localQuestion.answers" :key="answer.id" class="form-group mb-3">
                 <label :for="'answer-title-' + answer.id" class="form-label d-flex text-start">
                   Mức độ {{ answerIndex + 1 }}:
                 </label>
-                <input
-                  type="text"
-                  :id="'answer-title-' + answer.id"
-                  v-model="answer.title"
-                  class="form-control"
-                  :class="{ 'is-invalid': errors['answer-' + answer.id] }"
-                  @blur="validateAnswer(answer)"
-                />
-                <div
-                  v-if="errors['answer-' + answer.id]"
-                  class="invalid-feedback"
-                >
+                <input type="text" :id="'answer-title-' + answer.id" v-model="answer.title" class="form-control"
+                  :class="{ 'is-invalid': errors['answer-' + answer.id] }" @blur="validateAnswer(answer)" />
+                <div v-if="errors['answer-' + answer.id]" class="invalid-feedback">
                   {{ errors["answer-" + answer.id] }}
                 </div>
               </div>
@@ -82,12 +43,8 @@
           </div>
           <div class="modal-footer">
             <div class="d-flex justify-content-end mt-5">
-              <button
-                type="submit"
-                class="btn btn-primary me-2"
-                :disabled="hasErrors || isSubmitting"
-                @click="addQuestion"
-              >
+              <button type="submit" class="btn btn-primary me-2" :disabled="hasErrors || isSubmitting"
+                @click="addQuestion">
                 Thêm
               </button>
             </div>
@@ -154,7 +111,7 @@ export default {
       };
 
       try {
-        await axios.post("http://localhost:8080/api/questions", payload);
+        await axios.post(process.env.VUE_APP_DB_URL + "/api/questions", payload);
         toast.success("Thêm câu hỏi thành công");
         this.$emit("question-added", payload);
         this.closeForm(); // Đóng form sau khi thêm câu hỏi
@@ -225,6 +182,7 @@ export default {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

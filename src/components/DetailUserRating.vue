@@ -34,7 +34,7 @@
   <br />
   <RadarChart />
   <br />
-  <div class="content">
+  <div class="content mb-5">
     <div class="mt-2">
       <table class="table table-hover table-bordered my-table">
         <thead>

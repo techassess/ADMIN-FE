@@ -3,7 +3,7 @@ const DepartmentsService = {
   // department
   fetchDepartment: async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/departments");
+      const response = await axios.get(process.env.VUE_APP_DB_URL + "/api/departments");
       return response;
     } catch (error) {
       console.error(error);
@@ -12,7 +12,7 @@ const DepartmentsService = {
 
   addDepartment: async (formData) => {
     const resp = await axios.post(
-      "http://localhost:8080/api/departments",
+      process.env.VUE_APP_DB_URL + "/api/departments",
       formData,
       {
         headers: { "Content-Type": "application/json" },
@@ -24,7 +24,7 @@ const DepartmentsService = {
   fetchDepartmentById: async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/departments/${id}`
+        process.env.VUE_APP_DB_URL + `/api/departments/${id}`
       );
       return response.data;
     } catch (error) {
@@ -38,7 +38,7 @@ const DepartmentsService = {
       };
 
       const response = await axios.put(
-        `http://localhost:8080/api/departments/${id}`,
+        process.env.VUE_APP_DB_URL + `/api/departments/${id}`,
         updateDepartments
       );
       return response.data;
@@ -52,7 +52,7 @@ const DepartmentsService = {
     console.log("id ", id);
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/departments/${id}`
+        process.env.VUE_APP_DB_URL + `/api/departments/${id}`
       );
       return response;
     } catch (error) {
