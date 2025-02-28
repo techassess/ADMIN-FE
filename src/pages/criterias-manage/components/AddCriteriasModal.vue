@@ -1,50 +1,27 @@
 <template>
   <div v-if="isVisible" class="modal-backdrop">
-    <div
-      class="modal fade show"
-      tabindex="-1"
-      id="myModal1"
-      aria-hidden="false"
-      style="display: block"
-    >
+    <div class="modal fade show" tabindex="-1" id="myModal1" aria-hidden="false" style="display: block">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: solid 0.05em gray">
             <h5 class="modal-title">Thêm mới tiêu chí</h5>
-            <button
-              type="button"
-              class="btn-close"
-              @click="closeModal"
-              aria-label="Close"
-            ></button>
+            <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
           </div>
 
           <div class="modal-body">
             <form ref="criteriaForm" class="form" @submit.prevent="addCriteria">
               <div class="mb-3">
                 <label for="title" class="form-label d-flex text-start">Tên tiêu chí</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="title"
-                  v-model="criteria.title"
-                  placeholder="Nhập tiêu chí đánh giá"
-                  :class="{ 'is-invalid': errors.title }"
-                />
+                <input type="text" class="form-control" id="title" v-model="criteria.title"
+                  placeholder="Nhập tiêu chí đánh giá" :class="{ 'is-invalid': errors.title }" />
                 <div class="invalid-feedback" v-if="errors.title">
                   {{ errors.title }}
                 </div>
               </div>
               <div class="mb-3">
-                <label for="criteriaType" class="form-label d-flex text-start"
-                  >Hiển thị cho</label
-                >
-                <select
-                  class="form-control"
-                  id="criteriaType"
-                  v-model="visibleFor"
-                  :class="{ 'is-invalid': errors.type }"
-                >
+                <label for="criteriaType" class="form-label d-flex text-start">Hiển thị cho</label>
+                <select class="form-control" id="criteriaType" v-model="visibleFor"
+                  :class="{ 'is-invalid': errors.type }">
                   <option value="ALL_MEMBER">Tất cả nhân viên</option>
                   <option value="SELF">Tự đánh giá</option>
                   <option value="CROSS">Đánh giá chéo</option>
@@ -71,7 +48,6 @@
 <script>
 import CriteriasService from "@/services/CriteriasService";
 import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 
 export default {
   name: "AddCriteriasModal",
@@ -112,7 +88,7 @@ export default {
       }
       const depart_Id = localStorage.getItem("selectedDepartmentId")
       const payload = {
-        departmentId: depart_Id, 
+        departmentId: depart_Id,
         criteriaReqDTO: {
           visibleFor: this.visibleFor,
           title: this.criteria.title,
@@ -158,6 +134,7 @@ export default {
 .is-invalid {
   border-color: #dc3545;
 }
+
 .invalid-feedback {
   color: #dc3545;
   font-size: 0.875em;
@@ -171,6 +148,7 @@ export default {
   width: 100%;
   box-sizing: border-box;
 }
+
 .modal-backdrop {
   position: fixed;
   top: 0;
