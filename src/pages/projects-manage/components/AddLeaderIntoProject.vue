@@ -38,7 +38,7 @@
                     ? item.rank.position.name
                     : "N/A"
                 }} -->
-                    FREHSER
+                MEMBER
               </td>
               <td>{{ item.rank ? item.rank.level : "N/A" }}</td>
               <td>{{ item.dateJoinCompany }}</td>
