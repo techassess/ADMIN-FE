@@ -18,12 +18,20 @@
           placeholder="Tìm kiếm nhân viên hoặc chức vụ..."
           class="search-bar"
         />
+        <div>
         <button
           @click="showAddEmployeeIntoProjectModal"
-          class="btn btn-success me-3"
+          class="btn btn-success ms-3"
         >
           Thêm nhân viên
         </button>
+        <button
+          @click="showAddLeaderIntoProjectModal"
+          class="btn btn-success ms-3"
+        >
+          Sửa Leader
+        </button>
+      </div>
       </div>
       <!-- member Table -->
       <div class="">
@@ -81,16 +89,26 @@
     @close="closeAddEmployeeIntoProjectModal"
     @add="addEmployee"
   />
+  <AddLeaderIntoProject
+    v-if="isShowAddLeaderIntoProjectModal"
+    :showAddLeader="isShowAddLeaderIntoProjectModal"
+    :project="project"
+    :filteredDetails="filteredDetails"
+    @close="closeAddLeaderIntoProjectModal"
+    @add="addLeader"
+  />
 </template>
 
 <script>
 import AddEmployeeIntoProject from "./AddEmployeeIntoProject.vue";
 import UserService from "@/services/UserService";
+import AddLeaderIntoProject from "./AddLeaderIntoProject.vue";
 
 export default {
   name: "ProjectDetails",
   components: {
     AddEmployeeIntoProject,
+    AddLeaderIntoProject
   },
   props: {
     project: {
@@ -103,6 +121,7 @@ export default {
     return {
       detailSearchQuery: "",
       isShowAddEmployeeIntoProjectModal: false,
+      isShowAddLeaderIntoProjectModal: false,
       sortDetailField: "",
       sortDetailDirection: 1,
       defaultImg: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
@@ -118,7 +137,7 @@ export default {
         const res = await UserService.fetchUserById(project.userId);
         if (res.code === 1010) {
           this.filteredDetails.push(res.data);
-          console.log(this.filteredDetails);
+          console.log("dữ liệu user: ",this.filteredDetails);
         }
       });
       //   console.log(this.filteredDetails);
@@ -178,13 +197,24 @@ export default {
     showAddEmployeeIntoProjectModal() {
       this.isShowAddEmployeeIntoProjectModal = true;
     },
+    showAddLeaderIntoProjectModal() {
+      this.isShowAddLeaderIntoProjectModal = true;
+    },
+
     closeAddEmployeeIntoProjectModal() {
       this.isShowAddEmployeeIntoProjectModal = false;
+    },
+    closeAddLeaderIntoProjectModal() {
+      this.isShowAddLeaderIntoProjectModal = false;
     },
     addEmployee() {
       this.closeAddEmployeeIntoProjectModal();
       location.reload();
     },
+    addLeader(){
+      this.closeAddLeaderIntoProjectModal()
+      location.reload();
+    }
   },
 };
 </script>
