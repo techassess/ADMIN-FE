@@ -8,20 +8,10 @@
         </h2>
         <button class="btn-close text-end" @click="close"></button>
       </div>
-      <div
-        class="top-bar d-flex flex-row justify-content-between pt-3 pb-3"
-        style="width: 100%"
-      >
-        <input
-          type="text"
-          v-model="detailSearchQuery"
-          placeholder="Tìm kiếm nhân viên hoặc chức vụ..."
-          class="search-bar"
-        />
-        <button
-          @click="showAddEmployeeIntoProjectModal"
-          class="btn btn-success me-3"
-        >
+      <div class="top-bar d-flex flex-row justify-content-between pt-3 pb-3" style="width: 100%">
+        <input type="text" v-model="detailSearchQuery" placeholder="Tìm kiếm nhân viên hoặc chức vụ..."
+          class="search-bar" />
+        <button @click="showAddEmployeeIntoProjectModal" class="btn btn-success me-3">
           Thêm nhân viên
         </button>
       </div>
@@ -35,18 +25,14 @@
               <th @click="sortDetail('name')">Tên NV</th>
               <th @click="sortDetail('position')">Chức vụ</th>
               <th>Bậc</th>
-              <th style="width: 220px;" >Tác vụ</th>
+              <th style="width: 220px;">Tác vụ</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(member, index) in filteredDetails" :key="index">
               <td>{{ index + 1 }}</td>
               <td>
-                <img
-                  :src="member.fileInfo ? member.fileInfo.fileUrl : defaultImg"
-                  alt="Avatar"
-                  class="avatar-img"
-                />
+                <img :src="member.fileInfo ? member.fileInfo.fileUrl : defaultImg" alt="Avatar" class="avatar-img" />
               </td>
               <td class="text-start">{{ member.name }}</td>
               <td>{{ member.rank ? member.rank.position.name : "N/A" }}</td>
@@ -56,14 +42,11 @@
               <td>
                 <div class="d-flex">
                   <button class="btn btn-info me-3">
-                    <router-link
-                      :to="`/detail-user-rating/${member.id}`"
-                      class="nav-link"
-                      active-class="active"
-                      >Xem đánh giá</router-link
-                    >
+                    <router-link :to="`/detail-user-rating/${member.id}`" class="nav-link" active-class="active">Xem
+                      đánh giá</router-link>
                   </button>
-                  <button type="button" class="btn btn-danger">Xoá</button>
+                  <button type="button" class="btn btn-danger"
+                    @click="deleteEmployeeFromProject(member.id)">Xoá</button>
                 </div>
               </td>
             </tr>
@@ -73,19 +56,16 @@
     </div>
   </div>
   <!-- Add Employee Into Project Modal -->
-  <AddEmployeeIntoProject
-    v-if="isShowAddEmployeeIntoProjectModal"
-    :showAddEmployee="isShowAddEmployeeIntoProjectModal"
-    :project="project"
-    :filteredDetails="filteredDetails"
-    @close="closeAddEmployeeIntoProjectModal"
-    @add="addEmployee"
-  />
+  <AddEmployeeIntoProject v-if="isShowAddEmployeeIntoProjectModal" :showAddEmployee="isShowAddEmployeeIntoProjectModal"
+    :project="project" :filteredDetails="filteredDetails" @close="closeAddEmployeeIntoProjectModal"
+    @add="addEmployee" />
 </template>
 
 <script>
+import ProjectService from "@/services/ProjectService";
 import AddEmployeeIntoProject from "./AddEmployeeIntoProject.vue";
 import UserService from "@/services/UserService";
+import Swal from "sweetalert2";
 
 export default {
   name: "ProjectDetails",
@@ -107,21 +87,48 @@ export default {
       sortDetailDirection: 1,
       defaultImg: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
       filteredDetails: [],
+      usersInProject: [],
     };
   },
   mounted() {
+    this.fetchUsersInProject(this.project.id);
     this.filteredMembers();
   },
   methods: {
+    async deleteEmployeeFromProject(userId) {
+      const res = await ProjectService.deleteEmployeeFromProject(this.project.id, userId);
+      if (res.status === 204) {
+        this.filteredDetails = this.filteredDetails.filter((item) => item.id !== userId);
+        Swal.fire({
+          icon: "success",
+          title: "Xoá thành công!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Xoá thất bại!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    },
+
+    async fetchUsersInProject(projectId) {
+      const res = await ProjectService.fetchUsersInProject(projectId);
+      if (res.code) {
+        this.usersInProject = res.data;
+      }
+    },
+
     filteredMembers() {
       this.project.userProjects.forEach(async (project) => {
         const res = await UserService.fetchUserById(project.userId);
         if (res.code === 1010) {
           this.filteredDetails.push(res.data);
-          console.log(this.filteredDetails);
         }
       });
-      //   console.log(this.filteredDetails);
     },
     submitForm() {
       // Kiểm tra tính hợp lệ của dữ liệu
@@ -362,6 +369,7 @@ export default {
   width: 50px;
   text-align: center;
 }
+
 .search-bar {
   padding: 10px;
   width: 350px;
@@ -381,6 +389,7 @@ export default {
   margin: 0 auto;
   /* Center align if necessary */
 }
+
 .project-table {
   border-collapse: separate;
   border-spacing: 0;

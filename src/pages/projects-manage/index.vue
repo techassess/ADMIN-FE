@@ -3,17 +3,9 @@
     <h2 style="text-align: center">Quản lý danh sách dự án</h2>
   </div>
   <div class="container">
-    <div
-      class="navbar navbar-light d-flex flex-row justify-content-between"
-      style="width: 100%"
-    >
+    <div class="navbar navbar-light d-flex flex-row justify-content-between" style="width: 100%">
       <!-- Search Bar -->
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Tìm kiếm tên dự án hoặc bộ phận..."
-        class="search-bar"
-      />
+      <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tên dự án hoặc bộ phận..." class="search-bar" />
       <button class="btn btn-success me-3" @click="showModalAddProject">
         Thêm dự án
       </button>
@@ -32,29 +24,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(projects, index) in paginatedProjects" :key="projects.id">
+          <tr v-for="(project, index) in paginatedProjects" :key="project.id">
             <td>
               {{ (currentPageProjects - 1) * pageSizeProjects + index + 1 }}
             </td>
-            <td class="project-name text-start" @click="showProjectDetailsModal(projects)">
-              {{ projects.name }}
+            <td class="project-name text-start" @click="showProjectDetailsModal(project)">
+              {{ project.name }}
             </td>
-            <td>{{ projects.userProjects.length }}</td>
-            <td>{{ projects.startDay }}</td>
-            <td>{{ projects.endDay }}</td>
+            <td>{{ project.userProjects.length }}</td>
+            <td>{{ project.startDay }}</td>
+            <td>{{ project.endDay }}</td>
             <td>
-              <button
-                type="button"
-                class="btn btn-warning me-3"
-                @click="showUpdateProjectModal(projects)"
-              >
+              <button type="button" class="btn btn-warning me-3" @click="showUpdateProjectModal(project)">
                 Cập nhật
               </button>
-              <button
-                type="button"
-                class="btn btn-danger"
-                @click="deleteProject(projects.id)"
-              >
+              <button type="button" class="btn btn-danger" @click="deleteProject(project.id)">
                 Xoá
               </button>
             </td>
@@ -64,43 +48,23 @@
 
 
     </div>
-          <!-- Pagination -->
-          <div class="pagination">
-        <button
-          @click="prevPage"
-          :disabled="currentPageProjects === 1"
-          class="pagination-btn"
-        >
-          <i class="fas fa-arrow-left"></i>
-        </button>
-        <span>Trang {{ currentPageProjects }} / {{ totalPages }}</span>
-        <button
-          @click="nextPage"
-          :disabled="currentPageProjects === totalPages"
-          class="pagination-btn"
-        >
-          <i class="fas fa-arrow-right"></i>
-        </button>
-      </div>
+    <!-- Pagination -->
+    <div class="pagination">
+      <button @click="prevPage" :disabled="currentPageProjects === 1" class="pagination-btn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <span>Trang {{ currentPageProjects }} / {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPageProjects === totalPages" class="pagination-btn">
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
 
     <!-- Add Project Modal -->
-    <AddProject
-      v-if="isShowProjectAddModal"
-      @close="closeModalAddproject"
-      @project-fetch="fetchProjects"
-    />
+    <AddProject v-if="isShowProjectAddModal" @close="closeModalAddproject" @project-fetch="fetchProjects" />
     <!-- Project Detail Modal -->
-    <ProjectDetails
-      v-if="isShowProjectDetailsModal"
-      :project="selectedProject"
-      @close="closeProjectDetailsModal"
-    />
-    <UpdateProject
-      v-if="isShowProjectUpdateModal"
-      :project="selectedProject"
-      @close="closeModalUpdateProject"
-      @project-fetch="fetchProjects"
-    />
+    <ProjectDetails v-if="isShowProjectDetailsModal" :project="selectedProject" @close="closeProjectDetailsModal" />
+    <UpdateProject v-if="isShowProjectUpdateModal" :project="selectedProject" @close="closeModalUpdateProject"
+      @project-fetch="fetchProjects" />
   </div>
 </template>
 
@@ -183,7 +147,6 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + "/api/projects");
         this.projects = response.data.data;
-        console.log(this.projects);
       } catch (error) {
         console.error("Error fetching projetcs:", error);
       }
@@ -397,7 +360,7 @@ export default {
 }
 
 .search-bar {
-  padding: 10px !important; 
+  padding: 10px !important;
   width: 350px;
   border-radius: 25px;
   border: 1px solid #ddd;
