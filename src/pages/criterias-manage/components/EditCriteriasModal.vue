@@ -1,54 +1,26 @@
 <template>
   <div v-if="isVisible1" class="modal-backdrop">
-    <div
-      class="modal fade show"
-      tabindex="-1"
-      aria-hidden="false"
-      style="display: block"
-    >
+    <div class="modal fade show" tabindex="-1" aria-hidden="false" style="display: block">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: solid 0.05em gray">
             <h5 class="modal-title">Cập nhật tiêu chí</h5>
-            <button
-              class="btn-close"
-              type="button"
-              @click="closeForm"
-              aria-label="Close"
-            ></button>
+            <button class="btn-close" type="button" @click="closeForm" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form>
               <div class="mb-3">
-                <label for="title" class="form-label d-flex text-start"
-                  >Tên tiêu chí:</label
-                >
-                <input
-                  type="text"
-                  id="title"
-                  v-model="criteria.title"
-                  class="form-control"
-                  @blur="validateTitle"
-                  @input="clearServerError"
-                  :class="{ 'is-invalid': errors.title || serverErrors.title }"
-                />
-                <div
-                  class="invalid-feedback"
-                  v-if="errors.title || serverErrors.title"
-                >
+                <label for="title" class="form-label d-flex text-start">Tên tiêu chí:</label>
+                <input type="text" id="title" v-model="criteria.title" class="form-control" @blur="validateTitle"
+                  @input="clearServerError" :class="{ 'is-invalid': errors.title || serverErrors.title }" />
+                <div class="invalid-feedback" v-if="errors.title || serverErrors.title">
                   {{ errors.title || serverErrors.title }}
                 </div>
               </div>
               <div class="mb-3">
-                <label for="criteriaType" class="form-label d-flex text-start"
-                  >Hiển thị cho</label
-                >
-                <select
-                  class="form-control"
-                  id="criteriaType"
-                  v-model="criteria.visibleFor"
-                  :class="{ 'is-invalid': errors.type }"
-                >
+                <label for="criteriaType" class="form-label d-flex text-start">Hiển thị cho</label>
+                <select class="form-control" id="criteriaType" v-model="criteria.visibleFor"
+                  :class="{ 'is-invalid': errors.type }">
                   <option value="">Vui lòng chọn</option>
                   <option value="ALL_MEMBER">Tất cả nhân viên</option>
                   <option value="SELF">Tự đánh giá</option>
@@ -63,12 +35,7 @@
           </div>
           <div class="modal-footer">
             <div class="d-flex justify-content-end">
-              <button
-                type="submit"
-                class="btn btn-primary me-2"
-                :disabled="hasErrors"
-                @click="updateCriteria"
-              >
+              <button type="submit" class="btn btn-primary me-2" :disabled="hasErrors" @click="updateCriteria">
                 Cập nhật
               </button>
             </div>
@@ -82,7 +49,6 @@
 <script>
 import CriteriasService from "@/services/CriteriasService";
 import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 
 export default {
   props: {

@@ -6,33 +6,15 @@
     <nav class="navbar navbar-light">
       <div class="">
         <label for="select_opt" class="pe-3"><strong>Phòng ban</strong></label>
-        <select
-          class="p-2 pe-3 rounded-5 "
-          aria-label="Default select example"
-          v-model="selectedDepartmentId"
-          @change="handleDepartmentChange"
-          id="select_opt"
-        >
-          <option
-            v-for="department in departments"
-            :key="department.id"
-            :value="department.id"
-          >
+        <select class="p-2 pe-3 rounded-5 " aria-label="Default select example" v-model="selectedDepartmentId"
+          @change="handleDepartmentChange" id="select_opt">
+          <option v-for="department in departments" :key="department.id" :value="department.id">
             {{ department.name }}
           </option>
         </select>
       </div>
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Tìm kiếm tiêu chí đánh giá..."
-        class="search-bar"
-      />
-      <button
-        class="btn btn-success me-3"
-        type="button"
-        @click="openAddCriteriaModal"
-      >
+      <input type="text" v-model="searchQuery" placeholder="Tìm kiếm tiêu chí đánh giá..." class="search-bar" />
+      <button class="btn btn-success me-3" type="button" @click="openAddCriteriaModal">
         Thêm tiêu chí
       </button>
     </nav>
@@ -48,10 +30,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(criteria, index) in paginatedCriterias"
-            :key="criteria.id"
-          >
+          <tr v-for="(criteria, index) in paginatedCriterias" :key="criteria.id">
             <td>{{ index + 1 }}</td>
             <td class="text-start">{{ criteria.title }}</td>
             <td class="text-start">
@@ -60,25 +39,12 @@
             <td>{{ criteria.point }}</td>
             <td>
               <button class="btn btn-primary me-3">
-                <router-link
-                  :to="`/detail-criterias/${criteria.id}`"
-                  class="nav-link"
-                  active-class="active"
-                  >Chi tiết</router-link
-                >
+                <router-link :to="`/detail-criterias/${criteria.id}`" class="nav-link" active-class="active">Chi
+                  tiết</router-link>
               </button>
 
-              <a
-                type="button"
-                class="btn btn-warning me-3"
-                @click="editCriterias(criteria)"
-                >Sửa</a
-              >
-              <button
-                type="button"
-                class="btn btn-danger"
-                @click="confirmDeleteCriterias(criteria.id)"
-              >
+              <a type="button" class="btn btn-warning me-3" @click="editCriterias(criteria)">Sửa</a>
+              <button type="button" class="btn btn-danger" @click="confirmDeleteCriterias(criteria.id)">
                 Xoá
               </button>
             </td>
@@ -89,35 +55,20 @@
 
     <!-- Pagination -->
     <div class="pagination-wrapper">
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="pagination-btn"
-      >
+      <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
         <i class="fas fa-arrow-left"></i>
       </button>
       <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="pagination-btn"
-      >
+      <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
         <i class="fas fa-arrow-right"></i>
       </button>
     </div>
 
     <!-- Modal Component -->
-    <AddCriteriasModal
-      :is-visible="isAddCriteriaModalVisible"
-      @close="closeAddCriteriaModal"
-      @criteria-added="fetchDepartments"
-    />
-    <EditCriteriasModal
-      :is-visible1="isModalVisible1"
-      :criteriasData="selectedCriterias"
-      @close="closeCriteriasEditModal"
-      @criteria-edited="fetchDepartments"
-    />
+    <AddCriteriasModal :is-visible="isAddCriteriaModalVisible" @close="closeAddCriteriaModal"
+      @criteria-added="fetchDepartments" />
+    <EditCriteriasModal :is-visible1="isModalVisible1" :criteriasData="selectedCriterias"
+      @close="closeCriteriasEditModal" @criteria-edited="fetchDepartments" />
   </div>
 </template>
 
@@ -126,7 +77,6 @@
 import CriteriasService from "@/services/CriteriasService";
 import Swal from "sweetalert2";
 import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 import AddCriteriasModal from "./components/AddCriteriasModal.vue";
 import EditCriteriasModal from "./components/EditCriteriasModal.vue";
 
@@ -162,11 +112,11 @@ export default {
     totalPages() {
       return Math.ceil(this.criterias.length / this.itemsPerPage);
     },
-    
-    fillterCriterias (){
-      return this.criterias.filter((criteria)=>
+
+    fillterCriterias() {
+      return this.criterias.filter((criteria) =>
         this.fetchUnsigned(criteria.title).includes(this.fetchUnsigned(this.searchQuery))
-     )
+      )
     },
 
     paginatedCriterias() {
@@ -175,14 +125,14 @@ export default {
       return this.fillterCriterias.slice(start, end);
     },
   },
-  methods: {  
+  methods: {
 
     fetchUnsigned(str) {//tìm kiếm khoogn dấu
-    if (typeof str !== "string") return "";
-    return str
+      if (typeof str !== "string") return "";
+      return str
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") 
-        .toLowerCase(); 
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
     },
     async fetchDepartments() {
       try {
@@ -404,7 +354,8 @@ export default {
   background-color: #fff;
   width: 100%;
 }
-#select_opt{
+
+#select_opt {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
 </style>

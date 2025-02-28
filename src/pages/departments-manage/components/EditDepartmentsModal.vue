@@ -1,41 +1,19 @@
 <template>
   <div v-if="isVisible1" class="modal-backdrop">
-    <div
-      class="modal fade show"
-      tabindex="-1"
-      aria-hidden="false"
-      style="display: block"
-    >
+    <div class="modal fade show" tabindex="-1" aria-hidden="false" style="display: block">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: solid 0.05em gray">
             <h5 class="modal-name">Cập nhật phòng ban</h5>
-            <button
-              type="button"
-              class="btn-close"
-              @click="closeForm"
-              aria-label="Close"
-            ></button>
+            <button type="button" class="btn-close" @click="closeForm" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form>
               <div class="mb-3">
-                <label for="name" class="form-label d-flex text-start"
-                  >Tên phòng ban:</label
-                >
-                <input
-                  type="text"
-                  id="name"
-                  v-model="department.name"
-                  class="form-control"
-                  @blur="validatename"
-                  @input="clearServerError"
-                  :class="{ 'is-invalid': errors.name || serverErrors.name }"
-                />
-                <div
-                  class="invalid-feedback"
-                  v-if="errors.name || serverErrors.name"
-                >
+                <label for="name" class="form-label d-flex text-start">Tên phòng ban:</label>
+                <input type="text" id="name" v-model="department.name" class="form-control" @blur="validatename"
+                  @input="clearServerError" :class="{ 'is-invalid': errors.name || serverErrors.name }" />
+                <div class="invalid-feedback" v-if="errors.name || serverErrors.name">
                   {{ errors.name || serverErrors.name }}
                 </div>
               </div>
@@ -43,12 +21,7 @@
           </div>
           <div class="modal-footer">
             <div class="d-flex justify-content-end">
-              <button
-                type="submit"
-                class="btn btn-primary me-2"
-                :disabled="hasErrors"
-                @click="updateDepartment"
-              >
+              <button type="submit" class="btn btn-primary me-2" :disabled="hasErrors" @click="updateDepartment">
                 Cập nhật
               </button>
             </div>
@@ -62,7 +35,6 @@
 <script>
 import departmentsService from "@/services/DepartmentsService";
 import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 
 export default {
   props: {
@@ -158,21 +130,26 @@ export default {
   overflow-y: auto;
   animation: fadeIn 0.3s ease-in-out;
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
+
 .is-invalid {
   border-color: #dc3545;
 }
+
 .invalid-feedback {
   color: #dc3545;
   font-size: 0.875em;
 }
+
 .modal-backdrop {
   position: fixed;
   top: 0;

@@ -4,17 +4,8 @@
   </div>
   <div class="content">
     <nav class="navbar navbar-light">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Tìm kiếm phòng ban..."
-        class="search-bar"
-      />
-      <button
-        class="btn btn-success me-3"
-        type="button"
-        @click="openAddDepartmentModal"
-      >
+      <input type="text" v-model="searchQuery" placeholder="Tìm kiếm phòng ban..." class="search-bar" />
+      <button class="btn btn-success me-3" type="button" @click="openAddDepartmentModal">
         Thêm phòng ban
       </button>
     </nav>
@@ -32,17 +23,8 @@
             <td>{{ index + 1 }}</td>
             <td class="text-start">{{ department.name }}</td>
             <td>
-              <a
-                type="button"
-                class="btn btn-warning me-3"
-                @click="editDepartments(department)"
-                >Sửa</a
-              >
-              <button
-                type="button"
-                class="btn btn-danger"
-                @click="confirmDeleteDepartments(department.id)"
-              >
+              <a type="button" class="btn btn-warning me-3" @click="editDepartments(department)">Sửa</a>
+              <button type="button" class="btn btn-danger" @click="confirmDeleteDepartments(department.id)">
                 Xoá
               </button>
             </td>
@@ -53,35 +35,20 @@
 
     <!-- Pagination -->
     <div class="pagination-wrapper">
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="pagination-btn"
-      >
+      <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
         <i class="fas fa-arrow-left"></i>
       </button>
       <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="pagination-btn"
-      >
+      <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
         <i class="fas fa-arrow-right"></i>
       </button>
     </div>
 
     <!-- Modal Component -->
-    <AddDepartmentModal
-      :is-visible="isAddDepartmentModalVisible"
-      @close="closeAddDepartmentModal"
-      @department-added="fetchDepartments"
-    />
-    <EditDepartmentsModal
-      :is-visible1="isModalVisible1"
-      :departmentsData="selectedDepartment"
-      @close="closeDepartmentsEditModal"
-      @department-edited="fetchDepartments"
-    />
+    <AddDepartmentModal :is-visible="isAddDepartmentModalVisible" @close="closeAddDepartmentModal"
+      @department-added="fetchDepartments" />
+    <EditDepartmentsModal :is-visible1="isModalVisible1" :departmentsData="selectedDepartment"
+      @close="closeDepartmentsEditModal" @department-edited="fetchDepartments" />
   </div>
 </template>
 
@@ -91,7 +58,6 @@ import Swal from "sweetalert2";
 import DepartmentsService from "@/services/DepartmentsService";
 import AddDepartmentModal from "./components/AddDepartmentModal.vue";
 import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 
 export default {
   components: {
@@ -118,10 +84,10 @@ export default {
       return Math.ceil(this.departments.length / this.itemsPerPage);
     },
     filteredDepartments() {
-    return this.departments.filter((department) =>
-      this.fetchUnsigned(department.name).includes(this.fetchUnsigned(this.searchQuery))
-    );
-  },
+      return this.departments.filter((department) =>
+        this.fetchUnsigned(department.name).includes(this.fetchUnsigned(this.searchQuery))
+      );
+    },
 
     paginatedDepartments() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -131,11 +97,11 @@ export default {
   },
   methods: {
     fetchUnsigned(str) {//tìm kiếm khoogn dấu
-    if (typeof str !== "string") return "";
-    return str
+      if (typeof str !== "string") return "";
+      return str
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") 
-        .toLowerCase(); 
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
     },
     // Lấy danh sách phòng ban từ API
     async fetchDepartments() {

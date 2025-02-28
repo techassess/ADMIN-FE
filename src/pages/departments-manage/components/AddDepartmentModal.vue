@@ -1,41 +1,19 @@
 <template>
   <div v-if="isVisible" class="modal-backdrop">
-    <div
-      class="modal fade show"
-      tabindex="-1"
-      id="myModal1"
-      aria-hidden="false"
-      style="display: block"
-    >
+    <div class="modal fade show" tabindex="-1" id="myModal1" aria-hidden="false" style="display: block">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: solid 0.05em gray">
             <h5 class="modal-name">Thêm mới phòng ban</h5>
-            <button
-              type="button"
-              class="btn-close"
-              @click="closeModal"
-              aria-label="Close"
-            ></button>
+            <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
           </div>
 
           <div class="modal-body">
-            <form
-              ref="departmentForm"
-              class="form"
-              @submit.prevent="addDepartment"
-            >
+            <form ref="departmentForm" class="form" @submit.prevent="addDepartment">
               <div class="mb-3">
                 <label for="name" class="form-label d-flex text-start">Tên phòng ban</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="name"
-                  v-model="department.name"
-                  @blur="validateTitle"
-                  :class="{ 'is-invalid': errors.name }"
-                  placeholder=" Nhập tên phòng ban"
-                />
+                <input type="text" class="form-control" id="name" v-model="department.name" @blur="validateTitle"
+                  :class="{ 'is-invalid': errors.name }" placeholder=" Nhập tên phòng ban" />
                 <div v-if="errors.name" class="invalid-feedback">
                   {{ errors.name }}
                 </div>
@@ -44,11 +22,7 @@
           </div>
 
           <div class="modal-footer">
-            <button
-              type="submit"
-              class="btn btn-primary"
-              @click="addDepartment"
-            >
+            <button type="submit" class="btn btn-primary" @click="addDepartment">
               Thêm
             </button>
           </div>
@@ -61,7 +35,6 @@
 <script>
 import DepartmentsService from "@/services/DepartmentsService";
 import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 
 export default {
   name: "AddDepartmentsModal",
@@ -151,10 +124,12 @@ export default {
 .is-invalid {
   border-color: #dc3545;
 }
+
 .invalid-feedback {
   color: #dc3545;
   font-size: 0.875em;
 }
+
 .modal-backdrop {
   position: fixed;
   top: 0;

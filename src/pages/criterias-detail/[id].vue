@@ -12,19 +12,13 @@
       <h4><strong>Tiêu đề:</strong> {{ criteriaDetail.title }}</h4>
       <h4 class="mb-3"><strong>Số điểm:</strong> {{ criteriaDetail.point }}</h4>
       <div class="d-flex justify-content-end mb-3">
-        <button
-          class="btn btn-success me-3"
-          type="button"
-          @click="openAddQuestionModal"
-        >
+        <button class="btn btn-success me-3" type="button" @click="openAddQuestionModal">
           Thêm câu hỏi
         </button>
       </div>
       <div class="" style="height: 64vh; width: 100%;">
-        <table
-          v-if="criteriaDetail.questions && criteriaDetail.questions.length > 0"
-          class="table table-hover table-bordered criteria-table"
-        >
+        <table v-if="criteriaDetail.questions && criteriaDetail.questions.length > 0"
+          class="table table-hover table-bordered criteria-table">
           <thead>
             <tr>
               <th style="width: 30px">STT</th>
@@ -34,31 +28,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="(question, index) in criteriaDetail.questions"
-              :key="index"
-            >
+            <tr v-for="(question, index) in criteriaDetail.questions" :key="index">
               <td>{{ index + 1 }}</td>
               <td class="text-start">{{ question.title }}</td>
               <td>{{ question.point }}</td>
               <td>
-                <button
-                  class="btn btn-primary me-2"
-                  @click="openDetailModal(question)"
-                >
+                <button class="btn btn-primary me-2" @click="openDetailModal(question)">
                   Chi tiết
                 </button>
-                <button
-                  class="btn btn-warning me-2"
-                  @click="openEditModal(question)"
-                >
+                <button class="btn btn-warning me-2" @click="openEditModal(question)">
                   Sửa
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  @click="confirmDeleteQuestion(question.id)"
-                >
+                <button type="button" class="btn btn-danger" @click="confirmDeleteQuestion(question.id)">
                   Xoá
                 </button>
               </td>
@@ -69,45 +50,24 @@
       </div>
 
       <div class="pagination-wrapper">
-        <button
-          @click="prevPage"
-          :disabled="currentPage === 1"
-          class="pagination-btn"
-        >
+        <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
           <i class="fas fa-arrow-left"></i>
         </button>
         <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-        <button
-          @click="nextPage"
-          :disabled="currentPage === totalPages"
-          class="pagination-btn"
-        >
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
           <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
 
-    <DetailQuestionModal
-      v-if="isDetailModalVisible"
-      :isVisible="isDetailModalVisible"
-      :question="selectedQuestion"
-      @close="closeDetailModal"
-    />
+    <DetailQuestionModal v-if="isDetailModalVisible" :isVisible="isDetailModalVisible" :question="selectedQuestion"
+      @close="closeDetailModal" />
 
-    <AddQuestionModal
-      v-if="isAddQuestionModalVisible"
-      :is-visible="isAddQuestionModalVisible"
-      @close="closeAddQuestionModal"
-      @question-added="refreshQuestions"
-    />
+    <AddQuestionModal v-if="isAddQuestionModalVisible" :is-visible="isAddQuestionModalVisible"
+      @close="closeAddQuestionModal" @question-added="refreshQuestions" />
 
-    <EditQuestionModal
-      v-if="isModalVisible"
-      :isVisible="isModalVisible"
-      :question="selectedQuestion"
-      @close="closeEditModal"
-      @question-updated="refreshQuestions"
-    />
+    <EditQuestionModal v-if="isModalVisible" :isVisible="isModalVisible" :question="selectedQuestion"
+      @close="closeEditModal" @question-updated="refreshQuestions" />
   </div>
 </template>
 
@@ -117,7 +77,6 @@ import EditQuestionModal from "./components/EditQuestionModal.vue";
 import Swal from "sweetalert2";
 import QuestionService from "@/services/QuestionService";
 import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 import AddQuestionModal from "./components/AddQuestionModal.vue";
 import DetailQuestionModal from "./components/DetailQuestionModal.vue";
 
@@ -267,6 +226,7 @@ export default {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
   position: relative;
 }
+
 .criteria-table th,
 .criteria-table td {
   padding: 7px;
@@ -274,6 +234,7 @@ export default {
   border-bottom: 1px solid #f0f0f0;
   text-align: center;
 }
+
 .criteria-table th {
   background-color: #000066;
   color: white;
@@ -281,12 +242,15 @@ export default {
   font-size: 20px;
   cursor: pointer;
 }
+
 .criteria-table tr:hover {
   background-color: #f9f9f9;
 }
+
 .criteria-table tr:nth-child(even) {
   background-color: #f2f2f2;
 }
+
 .pagination-wrapper {
   display: flex;
   justify-content: center;
