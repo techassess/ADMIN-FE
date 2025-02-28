@@ -33,11 +33,12 @@
               </td>
               <td>{{ item.name }}</td>
               <td>
-                {{
+                <!-- {{
                   item.rank && item.rank.position
                     ? item.rank.position.name
                     : "N/A"
-                }}
+                }} -->
+                    FREHSER
               </td>
               <td>{{ item.rank ? item.rank.level : "N/A" }}</td>
               <td>{{ item.dateJoinCompany }}</td>
@@ -116,7 +117,7 @@ export default {
   },
   methods: {
     async fetchEmployees() {
-      this.employees = this.filteredDetails
+      this.employees = this.filteredDetails.filter(emp => this.project.leaderId !== emp.id);
     },
     async updateProject() {
       const employeeId = this.selectedEmployee !== null ? this.employees[this.selectedEmployee].id : null;
@@ -125,18 +126,15 @@ export default {
       try {
         const response = await axios.put(`${this.apiUrl}/api/projects/updateLeader/${this.project.id}`, updatedProject);
         if (response.status === 200 || response.status === 201) {
-          // const selectedEmployeeDetails = this.selectedEmployees?.map(
-          //   (index) => this.employees[index]
-          // ) || [];
-          // this.$emit("add", selectedEmployeeDetails);
+          this.$emit("add", employeeId);
           this.resetForm();
+          this.close();
           Swal.fire({
             title: "Thành công!",
             text: "Cập nhật trưởng nhóm thành công!",
             icon: "success",
             timer: 1500,
           });
-          this.close();
 
         } else {
           console.error("Failed to update project:", response.data.message);

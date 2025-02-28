@@ -53,7 +53,7 @@
                 <img :src="member.fileInfo ? member.fileInfo.fileUrl : defaultImg" alt="Avatar" class="avatar-img" />
               </td>
               <td class="text-start">{{ member.name }}</td>
-              <td>{{ member.rank ? member.rank.position.name : "N/A" }}</td>
+              <td>{{ project.leaderId === member.id ? "LEADER" : "FRESHER" }}</td>
               <td>
                 {{ member.rank ? member.rank.level : "N/A" }}
               </td>
