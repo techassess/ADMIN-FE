@@ -8,12 +8,30 @@
         </h2>
         <button class="btn-close text-end" @click="close"></button>
       </div>
-      <div class="top-bar d-flex flex-row justify-content-between pt-3 pb-3" style="width: 100%">
-        <input type="text" v-model="detailSearchQuery" placeholder="Tìm kiếm nhân viên hoặc chức vụ..."
-          class="search-bar" />
-        <button @click="showAddEmployeeIntoProjectModal" class="btn btn-success me-3">
+      <div
+        class="top-bar d-flex flex-row justify-content-between pt-3 pb-3"
+        style="width: 100%"
+      >
+        <input
+          type="text"
+          v-model="detailSearchQuery"
+          placeholder="Tìm kiếm nhân viên hoặc chức vụ..."
+          class="search-bar"
+        />
+        <div>
+        <button
+          @click="showAddEmployeeIntoProjectModal"
+          class="btn btn-success ms-3"
+        >
           Thêm nhân viên
         </button>
+        <button
+          @click="showAddLeaderIntoProjectModal"
+          class="btn btn-success ms-3"
+        >
+          Sửa Leader
+        </button>
+      </div>
       </div>
       <!-- member Table -->
       <div class="">
@@ -35,7 +53,7 @@
                 <img :src="member.fileInfo ? member.fileInfo.fileUrl : defaultImg" alt="Avatar" class="avatar-img" />
               </td>
               <td class="text-start">{{ member.name }}</td>
-              <td>{{ member.rank ? member.rank.position.name : "N/A" }}</td>
+              <td>{{ project.leaderId === member.id ? "LEADER" : "MEMBER" }}</td>
               <td>
                 {{ member.rank ? member.rank.level : "N/A" }}
               </td>
@@ -56,21 +74,36 @@
     </div>
   </div>
   <!-- Add Employee Into Project Modal -->
-  <AddEmployeeIntoProject v-if="isShowAddEmployeeIntoProjectModal" :showAddEmployee="isShowAddEmployeeIntoProjectModal"
-    :project="project" :filteredDetails="filteredDetails" @close="closeAddEmployeeIntoProjectModal"
-    @add="addEmployee" />
+  <AddEmployeeIntoProject
+    v-if="isShowAddEmployeeIntoProjectModal"
+    :showAddEmployee="isShowAddEmployeeIntoProjectModal"
+    :project="project"
+    :filteredDetails="filteredDetails"
+    @close="closeAddEmployeeIntoProjectModal"
+    @add="addEmployee"
+  />
+  <AddLeaderIntoProject
+    v-if="isShowAddLeaderIntoProjectModal"
+    :showAddLeader="isShowAddLeaderIntoProjectModal"
+    :project="project"
+    :filteredDetails="filteredDetails"
+    @close="closeAddLeaderIntoProjectModal"
+    @add="addLeader"
+  />
 </template>
 
 <script>
 import ProjectService from "@/services/ProjectService";
 import AddEmployeeIntoProject from "./AddEmployeeIntoProject.vue";
 import UserService from "@/services/UserService";
+import AddLeaderIntoProject from "./AddLeaderIntoProject.vue";
 import Swal from "sweetalert2";
 
 export default {
   name: "ProjectDetails",
   components: {
     AddEmployeeIntoProject,
+    AddLeaderIntoProject
   },
   props: {
     project: {
@@ -83,6 +116,7 @@ export default {
     return {
       detailSearchQuery: "",
       isShowAddEmployeeIntoProjectModal: false,
+      isShowAddLeaderIntoProjectModal: false,
       sortDetailField: "",
       sortDetailDirection: 1,
       defaultImg: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
@@ -185,13 +219,24 @@ export default {
     showAddEmployeeIntoProjectModal() {
       this.isShowAddEmployeeIntoProjectModal = true;
     },
+    showAddLeaderIntoProjectModal() {
+      this.isShowAddLeaderIntoProjectModal = true;
+    },
+
     closeAddEmployeeIntoProjectModal() {
       this.isShowAddEmployeeIntoProjectModal = false;
+    },
+    closeAddLeaderIntoProjectModal() {
+      this.isShowAddLeaderIntoProjectModal = false;
     },
     addEmployee() {
       this.closeAddEmployeeIntoProjectModal();
       location.reload();
     },
+    addLeader(){
+      this.closeAddLeaderIntoProjectModal()
+      location.reload();
+    }
   },
 };
 </script>
